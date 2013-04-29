@@ -1,24 +1,40 @@
 package
 {
+    import Loom.GameFramework.LoomGameObject;
     import Loom.GameFramework.TickedComponent;
     import Loom.GameFramework.TimeManager;
     import Loom.Graphics.Point2;
     
+    import Loom.Animation.Tween;
+    import Loom.Animation.EaseType;
+    
     import cocos2d.CCScaledLayer;
+    
+    public delegate OrbDeathCallback(orb:OrbBehaviorComponent, object:LoomGameObject):void;
+    
+    enum orbType
+    {
+        Minus = 0,
+        Plus,
+        NumTypes
+    }
     
     public class OrbBehaviorComponent extends TickedComponent
     {
         [Inject]
         protected var _gameLayer:CCScaledLayer;
         
-        protected var _actor:ActorComponent;
-        protected var _texture:String;
-        protected var _alive:Boolean = true;
+        protected static var textures:Vector.<String> = ["minus", "plus"];
+        public static var colors:Vector.<int> = [0xE12300, 0x36A91B];
         
-        public function set actor(value:ActorComponent)
-        {
-            _actor = value;
-        }
+        protected var _texture:String;
+        
+        protected var _actor:ActorComponent;
+        protected var _alive:Boolean = false;
+        
+        protected var _type:orbType;
+        
+        public var onDeath:OrbDeathCallback = new OrbDeathCallback();
         
         public function set texture(value:String)
         {
@@ -30,37 +46,81 @@ package
             return _texture;
         }
         
-        public function OrbBehaviorComponent()
+        public function get type():orbType
         {
+            return _type;
         }
         
-        public override function onTick()
+        public function get alive():Boolean
+        {
+            return _alive;
+        }
+        
+        public function OrbBehaviorComponent()
+        {
+            _type = MathUtils.randomInRange(0, orbType.NumTypes as int) as orbType;
+            _texture = textures[_type as int];
+        }
+        
+        override public function onAdd():Boolean
+        {
+            if (!super.onAdd())
+                return false;
+                
+            _actor = owner.lookupComponentByName("actor") as ActorComponent;
+            
+            _actor.radius = 32;
+            _actor.position = MathUtils.randomPoint(100, 100, _gameLayer.designWidth - 100, _gameLayer.designHeight - 100);
+            // TODO: Set velocity so we're moving towards open space
+            _actor.velocity = MathUtils.randomPoint(10, 10, 100, 100);
+            _actor.velocity.x *= MathUtils.randomSign();
+            _actor.velocity.y *= MathUtils.randomSign();
+            
+            Tween.to(_actor, 0.15, { "scale" : 1, "opacity" : 255, "ease" : EaseType.EASE_IN }).onComplete += function()
+            {
+                _alive = true;
+            }
+            
+            return true;
+        }
+        
+        override public function onRemove()
+        {
+            super.onRemove();
+        }
+        
+        override public function onTick()
         {
             if (_alive)
             {
-                if (_actor.position.x < 0)
+                var shouldKill = false;
+                if ((_actor.position.x < 0) ||
+                    (_actor.position.x > _gameLayer.designWidth))
                 {
-                    trace("actor exit stage left");
-                    _alive = false;
-                }
-                else if (_actor.position.x > _gameLayer.designWidth)
-                {
-                    trace("actor exit stage right");
-                    _alive = false;
-                }
-                else if (_actor.position.y < 0)
-                {
-                    trace("actor exit stage down");
-                    _alive = false;
-                }
-                else if (_actor.position.y > _gameLayer.designHeight)
-                {
-                    trace("actor exit stage up");
-                    _alive = false;
+                    _actor.velocity.x *= -1;
                 }
                 
-                if (!_alive)
-                    owner.destroy();
+                if ((_actor.position.y - _actor.radius < 0) ||
+                    (_actor.position.y + _actor.radius > _gameLayer.designHeight))
+                {
+                    _actor.velocity.y *= -1;
+                }
+                
+                if (shouldKill)
+                {
+                    kill();
+                }
+            }
+        }
+        
+        public function kill()
+        {
+            if (!_alive) return;
+            
+            _alive = false;
+            Tween.to(_actor, 0.15, { "scale" : 0, "opacity" : 0, "ease" : EaseType.EASE_OUT }).onComplete += function()
+            {
+                onDeath(this, owner);
             }
         }
     }
