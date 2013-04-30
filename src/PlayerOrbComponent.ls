@@ -77,9 +77,8 @@ package
         
         override public function onTick()
         {
-            if (_alive)
-            {
-            }
+            _actor.position.x = Math.clamp(_actor.position.x, _actor.radius, _gameLayer.designWidth - _actor.radius);
+            _actor.position.y = Math.clamp(_actor.position.y, _actor.radius, _gameLayer.designHeight - _actor.radius);
         }
         
         public function onTouchBegan(id:int, touchX:Number, touchY:Number)
