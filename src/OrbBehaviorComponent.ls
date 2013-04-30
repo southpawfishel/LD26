@@ -24,7 +24,7 @@ package
         [Inject]
         protected var _gameLayer:CCScaledLayer;
         
-        protected static var textures:Vector.<String> = ["minus", "plus"];
+        protected static var textures:Vector.<String> = ["minus.png", "plus.png"];
         public static var colors:Vector.<int> = [0xE12300, 0x36A91B];
         
         protected var _texture:String;

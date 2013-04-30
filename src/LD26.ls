@@ -5,12 +5,16 @@ package
     import cocos2d.Cocos2DGame;
     import cocos2d.CCSprite;
     import cocos2d.ScaleMode;
+    import cocos2d.CCSpriteBatchNode;
+    import cocos2d.CCSpriteFrameCache;
 
     import UI.Atlas;
     import UI.Label;
 
     public class LD26 extends Cocos2DGame
     {
+        private var _batchNode:CCSpriteBatchNode = null;
+
         private var _gameView:GameView = null;
         private var _hud:HUDView;
         private var _gameOverView:GameOverView = null;
@@ -20,6 +24,13 @@ package
             super.run();
             
             Atlas.register("sprites", "assets/");
+            CCSpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile("assets/sprites.plist", "assets/sprites.png");
+
+            _batchNode = CCSpriteBatchNode.create("assets/sprites.png");
+            _batchNode.smoothed = false;
+            layer.addChild(_batchNode, 1);
+            group.registerManager(_batchNode);
+
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
             

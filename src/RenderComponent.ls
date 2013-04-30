@@ -2,8 +2,10 @@ package
 {
     import Loom.GameFramework.AnimatedComponent;
     
-    import UI.AtlasSprite;
-    
+    import cocos2d.CCSprite;
+    import cocos2d.CCSpriteFrame;
+    import cocos2d.CCSpriteFrameCache;
+    import cocos2d.CCSpriteBatchNode;
     import cocos2d.CCScaledLayer;
     import cocos2d.ccColor3B;
     
@@ -11,8 +13,11 @@ package
     {
         [Inject]
         protected var _gameLayer:CCScaledLayer;
+        [Inject]
+        protected var _batchNode:CCSpriteBatchNode;
     
-        protected var _sprite:AtlasSprite;
+        protected var _sprite:CCSprite;
+        protected var _texture:String;
         
         public function RenderComponent()
         {
@@ -23,10 +28,8 @@ package
             if (!super.onAdd())
                 return false;
             
-            _sprite = new AtlasSprite();
-            _sprite.atlasID = "sprites";
-            _sprite.smoothed = false;
-            _gameLayer.addChild(_sprite);
+            _sprite = CCSprite.createFromFile("assets/sprites.png");
+            _batchNode.addChild(_sprite);
                 
             onFrame();
             
@@ -35,7 +38,7 @@ package
         
         override public function onRemove()
         {
-            _gameLayer.removeChild(_sprite, true);
+            _batchNode.removeChild(_sprite, true);
         
             super.onRemove();
         }
@@ -61,14 +64,15 @@ package
         public function set opacity(value:int)
         {
             if (!_sprite) return;
-            _sprite.opacity = value;
+            _sprite.setOpacity(value);
         }
         
         public function set texture(value:String)
         {
             if (!_sprite) return;
-            if (_sprite.texture == value) return;
-            _sprite.texture = value;
+            if (_texture == value) return;
+            _texture = value;
+            _sprite.setDisplayFrame(CCSpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName(value));
         }
         
         protected var _r:int, _g:int, _b:int;
