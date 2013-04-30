@@ -12,6 +12,8 @@ package
     public class LD26 extends Cocos2DGame
     {
         private var _gameView:GameView = null;
+        private var _hud:HUDView;
+        private var _gameOverView:GameOverView = null;
     
         override public function run():void
         {
@@ -26,13 +28,43 @@ package
             layer.designWidth = layer.designHeight * getAspectRatio();
             
             _gameView = new GameView();
-            _gameView.group = group;
-            _gameView.enter(layer);
+            
+            _hud = new HUDView();
+            
+            _gameOverView = new GameOverView();
+            _gameOverView.onReset += onGameStart;
+            _gameOverView.onFadeIn += onGameOverFadeIn;
+            
+            onGameStart();
         }
         
         protected function getAspectRatio():Number
         {
             return (Cocos2D.getDisplayWidth() as Number) / (Cocos2D.getDisplayHeight() as Number);
+        }
+        
+        public function onGameStart()
+        {
+            _gameView.enter(layer);
+            _gameView.level.owningGroup = group;
+            _gameView.level.onGameOver += onGameOver;
+            
+            _gameView.level.onGameBegan += _hud.onGameBegan;
+            _gameView.level.onTimeChanged += _hud.onTimeChanged;
+            _gameView.level.onPolarityChanged += _hud.onPolarityChanged;
+            _hud.enter(layer);
+        }
+        
+        public function onGameOver(survivalTime:int, bestTime:int)
+        {
+            _gameOverView.enter(layer);
+        }
+        
+        public function onGameOverFadeIn()
+        {
+            // We can kill our game once the game over screen is faded in
+            _gameView.exit();
+            _hud.exit();
         }
     }
 }

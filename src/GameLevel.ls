@@ -16,13 +16,13 @@ package
     import cocos2d.CCSize;
     import cocos2d.CCArray;
     import cocos2d.CCDictionary;
+    import cocos2d.CCUserDefault;
     
     import System.Platform.Platform;
     
-    public delegate GameStartCallback():void;
-    public delegate TimeChangedCallback(milliseconds:int):void;
-    public delegate HealthChangedCallback(milliseconds:int):void;
-    public delegate GameOverCallback():void;
+    public delegate GameBeganCallback():void;
+    public delegate TimeChangedCallback(survivalTime:int, health:int, bestTime:int):void;
+    public delegate GameOverCallback(survivalTime:int, bestTime:int):void;
     
     public class GameLevel extends LoomGroup implements ITicked
     {
@@ -42,14 +42,16 @@ package
         private var _gameStartTime:int = 0;
         
         public static var INITIAL_HEALTH_MS:int = 30000;
-        private var _healthTime:int = INITIAL_HEALTH_MS;
+        private var _timeUntilDeath:int = INITIAL_HEALTH_MS;
         private var _playerGettingHurt:Boolean = false;
         private var _playerHurtPreviousTime:int = 0;
         
-        public var onGameStart:GameStartCallback = new GameStartCallback();
-        public var onTimeChanged:TimeChangedCallback = new TimeChangedCallback();
+        protected var _survivalTime:int = 0;
+        protected var _bestTime:int = 0;
+        
+        public var onGameBegan:GameBeganCallback = new GameBeganCallback();
         public var onPolarityChanged:PolarityChangedCallback = new PolarityChangedCallback();
-        public var onHealthChanged:HealthChangedCallback = new HealthChangedCallback();
+        public var onTimeChanged:TimeChangedCallback = new TimeChangedCallback();
         public var onGameOver:GameOverCallback = new GameOverCallback();
     
         public function GameLevel()
@@ -75,6 +77,9 @@ package
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
             
+            _bestTime = CCUserDefault.sharedUserDefault().getIntegerForKey("bestTime", 0);
+            onTimeChanged(_survivalTime, _timeUntilDeath, _bestTime);
+            
             _spawnTimer.onComplete = spawnRandomOrb;
         }
         
@@ -95,8 +100,6 @@ package
             {
                 orb.destroy();
             }
-            
-            trace("DELETE!");
         
             super.destroy();
         }
@@ -122,41 +125,48 @@ package
             
             // Update how much time has passed
             var time:int = Platform.getTime();
-            onTimeChanged(time - _gameStartTime);
+            _survivalTime = time - _gameStartTime;
+            
+            if (_survivalTime > _bestTime)
+            {
+                _bestTime = _survivalTime;
+            }
             
             if (_playerGettingHurt)
             {
                 var elapsedThisFrame = time - _playerHurtPreviousTime;
-                _healthTime = Math.max(0, _healthTime - elapsedThisFrame);
+                _timeUntilDeath = Math.max(0, _timeUntilDeath - elapsedThisFrame);
                 _playerHurtPreviousTime = time;
-                onHealthChanged(_healthTime);
                 
                 // Game over
-                if (_healthTime == 0)
+                if (_timeUntilDeath == 0)
                 {
+                    // Stop the game
                     _gameRunning = false;
-                    onGameOver();
+                    _spawnTimer.stop();
+                    
+                    CCUserDefault.sharedUserDefault().setIntegerForKey("bestTime", _bestTime);
+                    
+                    onGameOver(_survivalTime, _bestTime);
                 }
             }
+            
+            onTimeChanged(_survivalTime, _timeUntilDeath, _bestTime);
         }
         
         public function onTouchBegan(id:int, touchX:Number, touchY:Number)
         {
             if (!_playerOrb)
             {
-                // Notify interested parties that game started
-                onGameStart();
-                
                 // Reset timers
                 _gameStartTime = Platform.getTime();
-                _healthTime = INITIAL_HEALTH_MS;
-                _playerGettingHurt = false;
                 _spawnTimer.start();
                 
                 // Spawn the player
                 spawnPlayerOrb(id, touchX, touchY);
                 
                 _gameRunning = true;
+                onGameBegan();
             }
         }
         
@@ -171,7 +181,6 @@ package
             orbObject.addComponent(orbRenderer, "renderer");
             orbObject.addComponent(orbBehavior, "behavior");
             
-            orbBehavior.onDeath += onPlayerOrbDeath;
             orbBehavior.onPolarityChanged += onPlayerPolarityChanged;
             
             // TODO: Investigate why setting texture first is necessary for opacity to work
@@ -222,13 +231,6 @@ package
             orbBehavior.onDeath -= onOrbDeath;
             _orbs.remove(object);
             object.destroy();
-        }
-        
-        protected function onPlayerOrbDeath(orbBehavior:PlayerOrbComponent, object:LoomGameObject)
-        {
-            orbBehavior.onDeath -= onPlayerOrbDeath;
-            object.destroy();
-            _playerOrb = null;
         }
         
         public function onPlayerPolarityChanged(polarity:int)
