@@ -23,6 +23,8 @@ package
     {
         [Inject]
         protected var _gameLayer:CCScaledLayer;
+        protected var _designWidth:int;
+        protected var _designHeight:int;
         
         protected static var textures:Vector.<String> = ["minus.png", "plus.png"];
         public static var colors:Vector.<int> = [0xE12300, 0x36A91B];
@@ -69,8 +71,11 @@ package
                 
             _actor = owner.lookupComponentByName("actor") as ActorComponent;
             
+            _designWidth = _gameLayer.designWidth;
+            _designHeight = _gameLayer.designHeight;
+            
             _actor.radius = 32;
-            _actor.position = MathUtils.randomPoint(100, 100, _gameLayer.designWidth - 100, _gameLayer.designHeight - 100);
+            _actor.position = MathUtils.randomPoint(100, 100, _designWidth - 100, _designHeight - 100);
             // TODO: Set velocity so we're moving towards open space
             _actor.velocity = MathUtils.randomPoint(10, 10, 100, 100);
             _actor.velocity.x *= MathUtils.randomSign();
@@ -94,14 +99,14 @@ package
             if (_alive)
             {
                 var shouldKill = false;
-                if ((_actor.position.x < 0) ||
-                    (_actor.position.x > _gameLayer.designWidth))
+                if ((_actor.position.x - _actor.radius < 0) ||
+                    (_actor.position.x + _actor.radius > _designWidth))
                 {
                     _actor.velocity.x *= -1;
                 }
                 
                 if ((_actor.position.y - _actor.radius < 0) ||
-                    (_actor.position.y + _actor.radius > _gameLayer.designHeight))
+                    (_actor.position.y + _actor.radius > _designHeight))
                 {
                     _actor.velocity.y *= -1;
                 }

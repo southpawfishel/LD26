@@ -20,6 +20,11 @@ package
             return ret;
         }
         
+        public static function squareDistance(p1:Point2, p2:Point2):Number
+        {
+            return Math.pow(Math.abs(p1.x - p2.x), 2) + Math.pow(Math.abs(p1.y - p2.y), 2);
+        }
+        
         public static function randomInRange(min:int, max:int):int
         {
             return Math.floor(min + (Math.random() * (max - min)));

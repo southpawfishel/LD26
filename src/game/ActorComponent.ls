@@ -110,12 +110,14 @@ package
         
         public override function onTick()
         {
-            _position = _position + MathUtils.scalePoint(_velocity, timeManager.TICK_RATE);
+            _position.x += _velocity.x * timeManager.TICK_RATE;
+            _position.y += _velocity.y * timeManager.TICK_RATE;
+            //_position = _position + MathUtils.scalePoint(_velocity, timeManager.TICK_RATE);
         }
         
         public function collidesWithComponent(otherComponent:ActorComponent):Boolean
         {
-            var distanceSquared = MathUtils.subtractPoint(_position, otherComponent.position).getSquareMagnitude();
+            var distanceSquared = MathUtils.squareDistance(_position, otherComponent.position);
             var collisionDistance = (scaledRadius + otherComponent.scaledRadius) * (scaledRadius + otherComponent.scaledRadius);
             //trace("actual distance: " + distanceSquared + " collision distance: " + collisionDistance);
             return distanceSquared < collisionDistance;

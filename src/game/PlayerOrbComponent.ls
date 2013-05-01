@@ -19,6 +19,8 @@ package
     {
         [Inject]
         protected var _gameLayer:CCScaledLayer;
+        protected var _designWidth:int;
+        protected var _designHeight:int;
         
         protected var _texture:String;
         
@@ -63,6 +65,9 @@ package
             _gameLayer.onTouchMoved += onTouchMoved;
             _gameLayer.onTouchEnded += onTouchEnded;
             
+            _designWidth = _gameLayer.designWidth;
+            _designHeight = _gameLayer.designHeight;
+            
             return true;
         }
         
@@ -77,8 +82,8 @@ package
         
         override public function onTick()
         {
-            _actor.position.x = Math.clamp(_actor.position.x, _actor.radius, _gameLayer.designWidth - _actor.radius);
-            _actor.position.y = Math.clamp(_actor.position.y, _actor.radius, _gameLayer.designHeight - _actor.radius);
+            _actor.position.x = Math.clamp(_actor.position.x, _actor.scaledRadius, _designWidth - _actor.scaledRadius);
+            _actor.position.y = Math.clamp(_actor.position.y, _actor.scaledRadius, _designHeight - _actor.scaledRadius);
         }
         
         public function onTouchBegan(id:int, touchX:Number, touchY:Number)
