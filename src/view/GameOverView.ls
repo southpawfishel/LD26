@@ -1,21 +1,15 @@
 package
 {
-    import UI.View;
-    import UI.ViewCallback;
-    import UI.Label;
     
     import Loom.Animation.Tween;
     import Loom.Animation.EaseType;
     import Loom.LML.LML;
-    
     import Loom.Platform.Timer;
-    
-    import cocos2d.CCNode;
-    import cocos2d.CCPoint;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.CCUserDefault;
-    import cocos2d.CCLayerColor;
-    import cocos2d.ccColor4B;
+    import Loom2D.Display.DisplayObjectContainer;
+    import Loom2D.Display.Quad;
+    import Loom2D.UI.Label;
+    import UI.View;
+    import UI.ViewCallback;
     
     public class GameOverView extends View
     {
@@ -24,25 +18,25 @@ package
         
         protected var _gameOver:Label;
         
-        protected var _fadeToBlack:CCLayerColor = null;
+        protected var _fadeToBlack:Quad = null;
         
-        public function set opacity(value:int)
+        public function set alpha(value:Number)
         {
             if (_fadeToBlack)
             {
-                _fadeToBlack.setOpacity(value);
+                _fadeToBlack.alpha = value;
             }
             if (_gameOver)
             {
-                _gameOver.setOpacity(value);
+                _gameOver.alpha = value;
             }
         }
         
-        public function get opacity():int
+        public function get alpha():int
         {
             if (_fadeToBlack)
             {
-                return _fadeToBlack.getOpacity();
+                return _fadeToBlack.alpha;
             }
         }
         
@@ -51,7 +45,7 @@ package
             super();
         }
         
-        public function enter(parent:CCNode)
+        public function enter(parent:DisplayObjectContainer)
         {
             super.enter(parent);
             
@@ -59,17 +53,17 @@ package
             restartGameTimer.onComplete = onStartFadeOut;
             restartGameTimer.start();
             
-            var black:ccColor4B = new ccColor4B();
-            black.r = 0; black.g = 0; black.b = 0; black.a = 255;
-            _fadeToBlack = CCLayerColor.create(black, 5000, 5000);
-            _fadeToBlack.setOpacity(0);
-            addChild(_fadeToBlack);
+            //_fadeToBlack = new Quad(5000, 5000, 0x000000);
+            //_fadeToBlack.center = true;
+            //_fadeToBlack.alpha = 0;
+            //addChild(_fadeToBlack);
             
-            _gameOver = new Label("assets/Curse-hd.fnt");
+            _gameOver = new Label();
+            _gameOver.fontFile = "assets/Curse-hd.fnt";
             _gameOver.text = "GAME OVER";
             _gameOver.scale = 0.5;
-            _gameOver.setPosition(427, 320);
-            _gameOver.setOpacity(0);
+            _gameOver.x = 427; _gameOver.y = 320;
+            _gameOver.alpha = 0;
             addChild(_gameOver);
             
             Tween.to(this, 0.5, { "opacity" : 255 }).onComplete = function(tween:Tween)
@@ -77,7 +71,7 @@ package
                 onFadeIn();
             }
             
-            parent.reorderChild(this, 100);
+            parent.setChildIndex(this, 100);
         }
         
         public function exit()

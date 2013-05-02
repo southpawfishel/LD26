@@ -4,8 +4,6 @@ package
     import Loom.GameFramework.TimeManager;
     import Loom.Graphics.Point2;
     
-    import cocos2d.CCPoint;
-    
     public class ActorComponent extends TickedComponent
     {
         protected var _position:Point2 = new Point2(0, 0);

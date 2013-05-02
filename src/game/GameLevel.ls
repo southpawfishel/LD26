@@ -1,23 +1,17 @@
 package
 {
+    import cocos2d.CCUserDefault;
+    import CocosDenshion.SimpleAudioEngine;
+    import Loom.GameFramework.ITicked;
     import Loom.GameFramework.LoomGameObject;
     import Loom.GameFramework.LoomGroup;
-    import Loom.GameFramework.ITicked;
     import Loom.GameFramework.TimeManager;
     import Loom.Graphics.Point2;
     import Loom.Platform.Timer;
-    
-    import CocosDenshion.SimpleAudioEngine;
-    import cocos2d.ccColor4B;
-    import cocos2d.CCLayerColor;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.CCSpriteBatchNode;
-    import cocos2d.CCPoint;
-    import cocos2d.CCSize;
-    import cocos2d.CCArray;
-    import cocos2d.CCDictionary;
-    import cocos2d.CCUserDefault;
-    
+    import Loom2D.Display.Stage;
+    import Loom2D.Display.Quad;
+    import Loom2D.Events.Event;
+    import Loom2D.Events.TouchEvent;
     import System.Platform.Platform;
     
     public delegate GameBeganCallback():void;
@@ -27,11 +21,11 @@ package
     public class GameLevel extends LoomGroup implements ITicked
     {
         [Inject]
-        private var _rootLayer:CCScaledLayer;
+        private var _rootLayer:Stage;
         [Inject]
         private var _timeManager:TimeManager;
         
-        private var _bg:CCLayerColor;
+        private var _bg:Quad;
         
         private var _playerOrb:LoomGameObject = null;
         private var _orbs:Vector.<LoomGameObject> = new Vector.<LoomGameObject>();
@@ -64,15 +58,11 @@ package
             
             _timeManager.addTickedObject(this);
             
-            _rootLayer.onTouchBegan += onTouchBegan;
+            _rootLayer.addEventListener(Event.TOUCH_DOWN, onTouchBegan);
             
-            var bgColor:ccColor4B = new ccColor4B();
-            bgColor.r = 100;
-            bgColor.g = 100;
-            bgColor.b = 100;
-            bgColor.a = 255;
-            _bg = CCLayerColor.create(bgColor, _rootLayer.designWidth, _rootLayer.designHeight);
-            _rootLayer.addChild(_bg);
+            //_bg = new Quad(_rootLayer.width, _rootLayer.height, 0x646464);
+            //_bg.alpha = 1;
+            //_rootLayer.addChild(_bg);
             
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
@@ -87,7 +77,7 @@ package
         {
             _rootLayer.removeChild(_bg, true);
             
-            _rootLayer.onTouchBegan -= onTouchBegan;
+            _rootLayer.removeEventListener(Event.TOUCH_DOWN, onTouchBegan);
             
             _timeManager.removeTickedObject(this);
             
@@ -154,7 +144,7 @@ package
             onTimeChanged(_survivalTime, _timeUntilDeath, _bestTime);
         }
         
-        public function onTouchBegan(id:int, touchX:Number, touchY:Number)
+        public function onTouchBegan(event:TouchEvent)
         {
             if (!_playerOrb)
             {
@@ -163,14 +153,14 @@ package
                 _spawnTimer.start();
                 
                 // Spawn the player
-                spawnPlayerOrb(id, touchX, touchY);
+                spawnPlayerOrb(event.x, event.y);
                 
                 _gameRunning = true;
                 onGameBegan();
             }
         }
         
-        protected function spawnPlayerOrb(id:int, touchX:Number, touchY:Number)
+        protected function spawnPlayerOrb(touchX:Number, touchY:Number)
         {
             var orbObject = new LoomGameObject();
             var orbActor = new ActorComponent();

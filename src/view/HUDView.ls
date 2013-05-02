@@ -1,18 +1,12 @@
 package
 {
-    import UI.View;
-    import UI.ViewCallback;
-    import UI.Label;
-    
     import Loom.Animation.Tween;
     import Loom.Animation.EaseType;
     import Loom.LML.LML;
-    
-    import cocos2d.CCNode;
-    import cocos2d.CCPoint;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.CCLayerColor;
-    import cocos2d.ccColor4B;
+    import Loom2D.Display.DisplayObjectContainer;
+    import Loom2D.UI.Label;
+    import UI.View;
+    import UI.ViewCallback;
     
     public class HUDView extends View
     {
@@ -40,29 +34,29 @@ package
         {
             if (_time)
             {
-                _time.setAnchorPoint(new CCPoint(0, 0.5));
+                _time.pivotY = 0.5;
                 _time.text = "Survival Time: 0";
             }
             if (_bestTime)
             {
-                _bestTime.setAnchorPoint(new CCPoint(0, 0.5));
+                _bestTime.pivotY = 0.5;
                 _bestTime.text = "Longest Run: 0";
             }
             if (_health)
             {
-                _health.setAnchorPoint(new CCPoint(0, 0.5));
+                _health.pivotY = 0.5;
                 _health.text = "Health: " + GameLevel.INITIAL_HEALTH_MS;
             }
             //if (_polarity)
             //{
-            //    _polarity.setAnchorPoint(new CCPoint(0, 0.5));
+            //    _polarity.pivotY = 0.5;
             //    _polarity.text = "Polarity: 0";
             //}
         }
         
         public function onGameBegan()
         {
-            _startPrompt.setVisible(false);
+            _startPrompt.alpha = 0;
         }
         
         public function onTimeChanged(survivalTime:int, health:int, bestTime:int)
@@ -77,16 +71,16 @@ package
             //_polarity.text = "Polarity: " + (polarity > 0 ? "+" : "") + polarity;
         }
         
-        public function enter(parent:CCNode)
+        public function enter(parent:DisplayObjectContainer)
         {
             super.enter(parent);
             
             if (_startPrompt)
             {
-                _startPrompt.setVisible(true);
+                _startPrompt.alpha = 1;
             }
             
-            parent.reorderChild(this, 10);
+            parent.setChildIndex(this, 10);
         }
         
         public function exit()

@@ -1,14 +1,12 @@
 package
 {
+    import Loom.Animation.EaseType;
+    import Loom.Animation.Tween;
     import Loom.GameFramework.LoomGameObject;
     import Loom.GameFramework.TickedComponent;
     import Loom.GameFramework.TimeManager;
     import Loom.Graphics.Point2;
-    
-    import Loom.Animation.Tween;
-    import Loom.Animation.EaseType;
-    
-    import cocos2d.CCScaledLayer;
+    import Loom2D.Display.Stage;
     
     public delegate OrbDeathCallback(orb:OrbBehaviorComponent, object:LoomGameObject):void;
     
@@ -22,7 +20,7 @@ package
     public class OrbBehaviorComponent extends TickedComponent
     {
         [Inject]
-        protected var _gameLayer:CCScaledLayer;
+        protected var _gameLayer:Stage;
         protected var _designWidth:int;
         protected var _designHeight:int;
         
@@ -71,8 +69,8 @@ package
                 
             _actor = owner.lookupComponentByName("actor") as ActorComponent;
             
-            _designWidth = _gameLayer.designWidth;
-            _designHeight = _gameLayer.designHeight;
+            _designWidth = _gameLayer.stageWidth;
+            _designHeight = _gameLayer.stageHeight;
             
             _actor.radius = 32;
             _actor.position = MathUtils.randomPoint(100, 100, _designWidth - 100, _designHeight - 100);
@@ -81,7 +79,7 @@ package
             _actor.velocity.x *= MathUtils.randomSign();
             _actor.velocity.y *= MathUtils.randomSign();
             
-            Tween.to(_actor, 0.15, { "scale" : 1, "opacity" : 255, "ease" : EaseType.EASE_IN }).onComplete += function()
+            Tween.to(_actor, 0.15, { "scale" : 1, "alpha" : 1, "ease" : EaseType.EASE_IN }).onComplete += function()
             {
                 _alive = true;
             }
@@ -123,7 +121,7 @@ package
             if (!_alive) return;
             
             _alive = false;
-            Tween.to(_actor, 0.15, { "scale" : 0, "opacity" : 0, "ease" : EaseType.EASE_OUT }).onComplete += function()
+            Tween.to(_actor, 0.15, { "scale" : 0, "alpha" : 0, "ease" : EaseType.EASE_OUT }).onComplete += function()
             {
                 onDeath(this, owner);
             }

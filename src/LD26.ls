@@ -1,19 +1,15 @@
 package
 {
-    import CocosDenshion.SimpleAudioEngine;
     import cocos2d.Cocos2D;
-    import cocos2d.Cocos2DGame;
-    import cocos2d.CCSprite;
-    import cocos2d.ScaleMode;
-    import cocos2d.CCSpriteBatchNode;
-    import cocos2d.CCSpriteFrameCache;
+    import CocosDenshion.SimpleAudioEngine;
+    import Loom2D.Display.StageScaleMode;
+    import Loom2D.Display.Loom2DGame;
+    import Loom2D.Display.Sprite;
+    import Loom2D.UI.Atlas;
 
-    import UI.Atlas;
-    import UI.Label;
-
-    public class LD26 extends Cocos2DGame
+    public class LD26 extends Loom2DGame
     {
-        private var _batchNode:CCSpriteBatchNode = null;
+        private var _batchNode:Sprite = null;
 
         private var _gameView:GameView = null;
         private var _hud:HUDView;
@@ -24,19 +20,18 @@ package
             super.run();
             
             Atlas.register("sprites", "assets/");
-            CCSpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile("assets/sprites.plist", "assets/sprites.png");
 
-            _batchNode = CCSpriteBatchNode.create("assets/sprites.png");
-            _batchNode.smoothed = false;
-            layer.addChild(_batchNode, 1);
+            _batchNode = new Sprite();
+            stage.addChildAt(_batchNode, 0);
+            group.registerManager(stage);
             group.registerManager(_batchNode);
 
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
             
-            layer.scaleMode = ScaleMode.LETTERBOX;
-            layer.designHeight = 640;
-            layer.designWidth = layer.designHeight * getAspectRatio();
+            stage.scaleMode = StageScaleMode.LETTERBOX;
+            stage.stageHeight = 640;
+            stage.stageWidth = stage.stageWidth * getAspectRatio();
             
             _gameView = new GameView();
             
@@ -56,19 +51,19 @@ package
         
         public function onGameStart()
         {
-            _gameView.enter(layer);
+            _gameView.enter(stage);
             _gameView.level.owningGroup = group;
             _gameView.level.onGameOver += onGameOver;
             
             _gameView.level.onGameBegan += _hud.onGameBegan;
             _gameView.level.onTimeChanged += _hud.onTimeChanged;
             _gameView.level.onPolarityChanged += _hud.onPolarityChanged;
-            _hud.enter(layer);
+            _hud.enter(stage);
         }
         
         public function onGameOver(survivalTime:int, bestTime:int)
         {
-            _gameOverView.enter(layer);
+            _gameOverView.enter(stage);
         }
         
         public function onGameOverFadeIn()

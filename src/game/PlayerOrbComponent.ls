@@ -1,16 +1,16 @@
 package
 {
+    import CocosDenshion.SimpleAudioEngine;
+    import Loom.Animation.EaseType;
+    import Loom.Animation.Tween;
     import Loom.GameFramework.LoomGameObject;
     import Loom.GameFramework.TickedComponent;
     import Loom.GameFramework.TimeManager;
     import Loom.Graphics.Point2;
-    
-    import Loom.Animation.Tween;
-    import Loom.Animation.EaseType;
-    
-    import CocosDenshion.SimpleAudioEngine;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.ccColor3B;
+    import Loom2D.Display.Stage;
+    import Loom2D.Events.Event;
+    import Loom2D.Events.TouchEvent;
+    import Loom2D.Math.Color;
     
     public delegate PlayerOrbDeathCallback(orb:PlayerOrbComponent, object:LoomGameObject):void;
     public delegate PolarityChangedCallback(polarity:int):void;
@@ -18,7 +18,7 @@ package
     public class PlayerOrbComponent extends TickedComponent
     {
         [Inject]
-        protected var _gameLayer:CCScaledLayer;
+        protected var _gameLayer:Stage;
         protected var _designWidth:int;
         protected var _designHeight:int;
         
@@ -28,7 +28,7 @@ package
         protected var _alive:Boolean = false;
         
         protected var _trackingDrag:Boolean = false;
-        protected var _trackingDragId:int = -1;
+        protected var _trackingDragId:Object = null;
         
         public static var GOOD_SFX = "assets/boop.wav";
         public static var BAD_SFX = "assets/beep.wav";
@@ -61,21 +61,23 @@ package
             _actor = owner.lookupComponentByName("actor") as ActorComponent;
             _actor.radius = 35;
                 
-            _gameLayer.onTouchBegan += onTouchBegan;
-            _gameLayer.onTouchMoved += onTouchMoved;
-            _gameLayer.onTouchEnded += onTouchEnded;
+            _gameLayer.addEventListener(Event.TOUCH_DOWN, onTouchBegan);
+            // TODO
+            //_gameLayer.onTouchMoved += onTouchMoved;
+            //_gameLayer.onTouchEnded += onTouchEnded;
             
-            _designWidth = _gameLayer.designWidth;
-            _designHeight = _gameLayer.designHeight;
+            _designWidth = _gameLayer.stageWidth;
+            _designHeight = _gameLayer.stageHeight;
             
             return true;
         }
         
         override public function onRemove()
         {
-            _gameLayer.onTouchBegan -= onTouchBegan;
-            _gameLayer.onTouchMoved -= onTouchMoved;
-            _gameLayer.onTouchEnded -= onTouchEnded;
+            _gameLayer.removeEventListener(Event.TOUCH_DOWN, onTouchBegan);
+            // TODO
+            //_gameLayer.onTouchMoved -= onTouchMoved;
+            //_gameLayer.onTouchEnded -= onTouchEnded;
             
             super.onRemove();
         }
@@ -86,22 +88,22 @@ package
             _actor.position.y = Math.clamp(_actor.position.y, _actor.scaledRadius, _designHeight - _actor.scaledRadius);
         }
         
-        public function onTouchBegan(id:int, touchX:Number, touchY:Number)
+        public function onTouchBegan(event:TouchEvent, object:Object)
         {
             if (_trackingDrag) return;
-            if (_alive && !_actor.pointWithinRadius(touchX, touchY)) return;
+            if (_alive && !_actor.pointWithinRadius(event.x, event.y)) return;
             
             if (!_alive)
             {
-                Tween.to(_actor, 0.15, { "scale" : 1, "opacity" : 255, "ease" : EaseType.EASE_IN }).onComplete += function()
+                Tween.to(_actor, 0.15, { "scale" : 1, "alpha" : 1, "ease" : EaseType.EASE_IN }).onComplete += function()
                 {
                     _alive = true;
                 }
             }
             
             _trackingDrag = true;
-            _trackingDragId = id;
-            _actor.setPosition(touchX, touchY);
+            _trackingDragId = object;
+            _actor.setPosition(event.x, event.y);
         }
         
         protected function onTouchMoved(id:int, touchX:Number, touchY:Number)
@@ -116,7 +118,7 @@ package
             if (_trackingDrag && _trackingDragId == id)
             {
                 _trackingDrag = false;
-                _trackingDragId = -1;
+                _trackingDragId = null;
             }
         }
         
@@ -162,21 +164,21 @@ package
             onPolarityChanged(_polarity);
             
             // Determine our dominant color based on what we've absorbed
-            var dominantColor = new ccColor3B(255, 255, 255);
+            var dominantColor = new Color(255, 255, 255, 255);
             if (_polarity < 0)
             {
-                dominantColor = ColorUtils.intToRGB(OrbBehaviorComponent.colors[0]);
+                dominantColor = Color.fromInteger(OrbBehaviorComponent.colors[0]);
             }
             else if (_polarity > 0)
             {
-                dominantColor = ColorUtils.intToRGB(OrbBehaviorComponent.colors[1]);
+                dominantColor = Color.fromInteger(OrbBehaviorComponent.colors[1]);
             }
             
             // Scale based on our polarity
             var newScale = 1.0 + (0.1 * Math.abs(_polarity));
             
             // Tween to these new values
-            Tween.to(_actor, 0.2, { "r" : dominantColor.r, "g" : dominantColor.g, "b" : dominantColor.b, "scale" : newScale });
+            Tween.to(_actor, 0.2, { "r" : dominantColor.red, "g" : dominantColor.green, "b" : dominantColor.blue, "scale" : newScale });
             
             // Kill the orb we collided with
             behavior.kill();

@@ -1,22 +1,18 @@
 package
 {
+    import Loom2D.UI.AtlasSprite;
+    import Loom2D.Display.Sprite;
+    import Loom2D.Display.Stage;
     import Loom.GameFramework.AnimatedComponent;
-    
-    import cocos2d.CCSprite;
-    import cocos2d.CCSpriteFrame;
-    import cocos2d.CCSpriteFrameCache;
-    import cocos2d.CCSpriteBatchNode;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.ccColor3B;
     
     public class RenderComponent extends AnimatedComponent
     {
         [Inject]
-        protected var _gameLayer:CCScaledLayer;
+        protected var _gameLayer:Stage;
         [Inject]
-        protected var _batchNode:CCSpriteBatchNode;
+        protected var _batchNode:Sprite;
     
-        protected var _sprite:CCSprite;
+        protected var _sprite:AtlasSprite;
         protected var _texture:String;
         
         public function RenderComponent()
@@ -28,7 +24,9 @@ package
             if (!super.onAdd())
                 return false;
             
-            _sprite = CCSprite.createFromFile("assets/sprites.png");
+            _sprite  = new AtlasSprite();
+            _sprite.atlasName = "sprites";
+            _sprite.center = true;
             _batchNode.addChild(_sprite);
                 
             onFrame();
@@ -61,35 +59,37 @@ package
             _sprite.scale = value;
         }
         
-        public function set opacity(value:int)
+        public function set alpha(value:int)
         {
             if (!_sprite) return;
-            _sprite.setOpacity(value);
+            _sprite.alpha = value;
         }
         
         public function set texture(value:String)
         {
             if (!_sprite) return;
-            if (_texture == value) return;
-            _texture = value;
-            _sprite.setDisplayFrame(CCSpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName(value));
+            if (_sprite.textureName == value) return;
+            _sprite.textureName = value;
         }
         
-        protected var _r:int, _g:int, _b:int;
-        
-        public function get r():int { return _r; };
-        public function get g():int { return _g; };
-        public function get b():int { return _b; };
-        
-        public function set r(value:int):void { _r = value; setColor(new ccColor3B(_r, _g, _b)); };
-        public function set g(value:int):void { _g = value; setColor(new ccColor3B(_r, _g, _b)); };
-        public function set b(value:int):void { _b = value; setColor(new ccColor3B(_r, _g, _b)); };
-        
-        public function setColor(color:ccColor3B)
+        public function set r(value:Number)
         {
             if (!_sprite) return;
-            _sprite.setColor(color);
+            _sprite.r = value;
         }
+        
+        public function set g(value:Number)
+        {
+            if (!_sprite) return;
+            _sprite.g = value;
+        }
+        
+        public function set b(value:Number)
+        {
+            if (!_sprite) return;
+            _sprite.b = value;
+        }
+        
         
         public override function onFrame()
         {
