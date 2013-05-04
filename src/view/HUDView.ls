@@ -32,19 +32,23 @@ package
 
         protected function onLMLCreated()
         {
+            if (_startPrompt)
+            {
+                _startPrompt.center = true;
+            }
             if (_time)
             {
-                _time.pivotY = 0.5;
+                _time.pivotY = _time.height / 2;
                 _time.text = "Survival Time: 0";
             }
             if (_bestTime)
             {
-                _bestTime.pivotY = 0.5;
+                _bestTime.pivotY = _bestTime.height / 2;
                 _bestTime.text = "Longest Run: 0";
             }
             if (_health)
             {
-                _health.pivotY = 0.5;
+                _health.pivotY = _health.height / 2;
                 _health.text = "Health: " + GameLevel.INITIAL_HEALTH_MS;
             }
             //if (_polarity)

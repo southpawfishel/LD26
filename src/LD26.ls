@@ -3,8 +3,10 @@ package
     import cocos2d.Cocos2D;
     import CocosDenshion.SimpleAudioEngine;
     import Loom2D.Display.StageScaleMode;
-    import Loom2D.Display.Loom2DGame;
     import Loom2D.Display.Sprite;
+    import Loom2D.Display.Loom2DGame;
+    import Loom2D.Events.Event;
+    import Loom2D.Events.TouchEvent;
     import Loom2D.UI.Atlas;
 
     public class LD26 extends Loom2DGame
@@ -30,8 +32,8 @@ package
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
             
             stage.scaleMode = StageScaleMode.LETTERBOX;
-            stage.stageHeight = 640;
-            stage.stageWidth = stage.stageWidth * getAspectRatio();
+            stage.stageWidth = 1024;
+            stage.stageHeight = 768;
             
             _gameView = new GameView();
             

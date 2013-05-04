@@ -24,7 +24,7 @@ package
             if (!super.onAdd())
                 return false;
             
-            _sprite  = new AtlasSprite();
+            _sprite = new AtlasSprite();
             _sprite.atlasName = "sprites";
             _sprite.center = true;
             _batchNode.addChild(_sprite);

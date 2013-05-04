@@ -154,6 +154,8 @@ package
                 
                 // Spawn the player
                 spawnPlayerOrb(event.x, event.y);
+                var playerBehavior = _playerOrb.lookupComponentByName("behavior") as PlayerOrbComponent;
+                playerBehavior.onTouchBegan(event, event.data);
                 
                 _gameRunning = true;
                 onGameBegan();
@@ -181,7 +183,7 @@ package
             orbRenderer.addBinding("r", "@actor.r");
             orbRenderer.addBinding("g", "@actor.g");
             orbRenderer.addBinding("b", "@actor.b");
-            orbRenderer.addBinding("opacity", "@actor.opacity");
+            orbRenderer.addBinding("alpha", "@actor.alpha");
             
             orbObject.owningGroup = this;
             orbObject.initialize();
@@ -206,7 +208,7 @@ package
             orbRenderer.addBinding("y", "@actor.y");
             orbRenderer.addBinding("texture", "@behavior.texture");
             orbRenderer.addBinding("scale", "@actor.scale");
-            orbRenderer.addBinding("opacity", "@actor.opacity");
+            orbRenderer.addBinding("alpha", "@actor.alpha");
             
             orbObject.owningGroup = this;
             orbObject.initialize();

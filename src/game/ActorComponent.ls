@@ -11,7 +11,7 @@ package
         protected var _scale:Number = 0;
         protected var _radius:Number = 0;
         protected var _r:int = 255, _g:int = 255, _b:int = 255;
-        protected var _opacity:int = 0;
+        protected var _alpha:int = 0;
         
         public function ActorComponent()
         {
@@ -83,14 +83,14 @@ package
             return _scale;
         }
         
-        public function set opacity(value:int)
+        public function set alpha(value:int)
         {
-            _opacity = value;
+            _alpha = value;
         }
         
-        public function get opacity():int
+        public function get alpha():int
         {
-            return _opacity;
+            return _alpha;
         }
         
         public function get r():int { return _r; };

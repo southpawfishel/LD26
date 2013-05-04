@@ -50,7 +50,7 @@ package
         
         public function PlayerOrbComponent()
         {
-            texture = "whiteorb.png";
+            texture = "whiteorb";
         }
         
         override public function onAdd():Boolean

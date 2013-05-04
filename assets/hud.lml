@@ -1,9 +1,9 @@
 <HUDView>
 
-    <Loom2D.UI.Label id="_startPrompt" fontFile="assets/Curse-hd.fnt" text="Touch Anywhere to Start" x="427" y="320" scale="0.5" />
+    <Loom2D.UI.Label id="_startPrompt" fontFile="assets/Curse-hd.fnt" text="Touch Anywhere to Start" x="512" y="384" scale="0.5" />
 
-    <Loom2D.UI.Label id="_time" fontFile="assets/Curse-hd.fnt" text="Survival Time: 0" x="10" y="630" scale="0.2" />
-    <Loom2D.UI.Label id="_health" fontFile="assets/Curse-hd.fnt" text="Health: 30" x="10" y="610" scale="0.2" />
-    <Loom2D.UI.Label id="_bestTime" fontFile="assets/Curse-hd.fnt" text="Longest Run: 0" x="10" y="590" scale="0.2" />
+    <Loom2D.UI.Label id="_time" fontFile="assets/Curse-hd.fnt" text="Survival Time: 0" x="10" y="758" scale="0.2" />
+    <Loom2D.UI.Label id="_health" fontFile="assets/Curse-hd.fnt" text="Health: 30" x="10" y="738" scale="0.2" />
+    <Loom2D.UI.Label id="_bestTime" fontFile="assets/Curse-hd.fnt" text="Longest Run: 0" x="10" y="718" scale="0.2" />
 
 </HUDView>

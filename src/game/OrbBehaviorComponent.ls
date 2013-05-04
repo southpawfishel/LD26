@@ -24,7 +24,7 @@ package
         protected var _designWidth:int;
         protected var _designHeight:int;
         
-        protected static var textures:Vector.<String> = ["minus.png", "plus.png"];
+        protected static var textures:Vector.<String> = ["minus", "plus"];
         public static var colors:Vector.<int> = [0xE12300, 0x36A91B];
         
         protected var _texture:String;
