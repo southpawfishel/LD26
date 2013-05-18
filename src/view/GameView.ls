@@ -1,9 +1,8 @@
 package
 {
-    import Loom2D.Display.DisplayObjectContainer;
-    import UI.View;
+	import Loom2D.Display.DisplayObjectContainer;
+	import UI.View;
     
-    import Loom.GameFramework.LoomGroup;
     
     public class GameView extends View
     {

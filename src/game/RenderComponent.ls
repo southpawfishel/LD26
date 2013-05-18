@@ -1,18 +1,18 @@
 package
 {
-    import Loom2D.UI.AtlasSprite;
-    import Loom2D.Display.Sprite;
-    import Loom2D.Display.Stage;
-    import Loom.GameFramework.AnimatedComponent;
+	import Loom.GameFramework.AnimatedComponent;
+	import Loom2D.Display.Sprite;
+	import Loom2D.Display.Stage;
+	import Loom2D.UI.TextureAtlasSprite;
     
     public class RenderComponent extends AnimatedComponent
     {
         [Inject]
-        protected var _gameLayer:Stage;
+        protected var _stage:Stage;
         [Inject]
         protected var _batchNode:Sprite;
     
-        protected var _sprite:AtlasSprite;
+        protected var _sprite:TextureAtlasSprite;
         protected var _texture:String;
         
         public function RenderComponent()
@@ -24,10 +24,10 @@ package
             if (!super.onAdd())
                 return false;
             
-            _sprite = new AtlasSprite();
+            _sprite = new TextureAtlasSprite();
             _sprite.atlasName = "sprites";
             _sprite.center = true;
-            _batchNode.addChild(_sprite);
+            _stage.addChild(_sprite);
                 
             onFrame();
             
@@ -94,6 +94,7 @@ package
         public override function onFrame()
         {
             super.onFrame();
+            _sprite.render();
         }
     }
 }

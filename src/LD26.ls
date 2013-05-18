@@ -1,13 +1,11 @@
 package
 {
-    import cocos2d.Cocos2D;
-    import CocosDenshion.SimpleAudioEngine;
-    import Loom2D.Display.StageScaleMode;
-    import Loom2D.Display.Sprite;
-    import Loom2D.Display.Loom2DGame;
-    import Loom2D.Events.Event;
-    import Loom2D.Events.TouchEvent;
-    import Loom2D.UI.Atlas;
+	import cocos2d.Cocos2D;
+	import CocosDenshion.SimpleAudioEngine;
+	import Loom2D.Display.Loom2DGame;
+	import Loom2D.Display.Sprite;
+	import Loom2D.Display.StageScaleMode;
+	import Loom2D.UI.TextureAtlasManager;
 
     public class LD26 extends Loom2DGame
     {
@@ -21,10 +19,10 @@ package
         {
             super.run();
             
-            Atlas.register("sprites", "assets/");
+            TextureAtlasManager.register("sprites", "assets/");
 
             _batchNode = new Sprite();
-            stage.addChildAt(_batchNode, 0);
+            stage.addChild(_batchNode);
             group.registerManager(stage);
             group.registerManager(_batchNode);
 

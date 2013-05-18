@@ -1,16 +1,14 @@
 package
 {
-    import CocosDenshion.SimpleAudioEngine;
-    import Loom.Animation.EaseType;
-    import Loom.Animation.Tween;
-    import Loom.GameFramework.LoomGameObject;
-    import Loom.GameFramework.TickedComponent;
-    import Loom.GameFramework.TimeManager;
-    import Loom.Graphics.Point2;
-    import Loom2D.Display.Stage;
-    import Loom2D.Events.Event;
-    import Loom2D.Events.TouchEvent;
-    import Loom2D.Math.Color;
+	import CocosDenshion.SimpleAudioEngine;
+	import Loom.Animation.EaseType;
+	import Loom.Animation.Tween;
+	import Loom.GameFramework.LoomGameObject;
+	import Loom.GameFramework.TickedComponent;
+	import Loom2D.Display.Stage;
+	import Loom2D.Events.Event;
+	import Loom2D.Events.TouchEvent;
+	import Loom2D.Math.Color;
     
     public delegate PlayerOrbDeathCallback(orb:PlayerOrbComponent, object:LoomGameObject):void;
     public delegate PolarityChangedCallback(polarity:int):void;
@@ -18,7 +16,7 @@ package
     public class PlayerOrbComponent extends TickedComponent
     {
         [Inject]
-        protected var _gameLayer:Stage;
+        protected var _stage:Stage;
         protected var _designWidth:int;
         protected var _designHeight:int;
         
@@ -61,23 +59,23 @@ package
             _actor = owner.lookupComponentByName("actor") as ActorComponent;
             _actor.radius = 35;
                 
-            _gameLayer.addEventListener(Event.TOUCH_DOWN, onTouchBegan);
+            _stage.addEventListener(Event.TOUCH_DOWN, onTouchBegan);
             // TODO
-            //_gameLayer.onTouchMoved += onTouchMoved;
-            //_gameLayer.onTouchEnded += onTouchEnded;
+            //_stage.onTouchMoved += onTouchMoved;
+            //_stage.onTouchEnded += onTouchEnded;
             
-            _designWidth = _gameLayer.stageWidth;
-            _designHeight = _gameLayer.stageHeight;
+            _designWidth = _stage.stageWidth;
+            _designHeight = _stage.stageHeight;
             
             return true;
         }
         
         override public function onRemove()
         {
-            _gameLayer.removeEventListener(Event.TOUCH_DOWN, onTouchBegan);
+            _stage.removeEventListener(Event.TOUCH_DOWN, onTouchBegan);
             // TODO
-            //_gameLayer.onTouchMoved -= onTouchMoved;
-            //_gameLayer.onTouchEnded -= onTouchEnded;
+            //_stage.onTouchMoved -= onTouchMoved;
+            //_stage.onTouchEnded -= onTouchEnded;
             
             super.onRemove();
         }

@@ -1,12 +1,10 @@
 package
 {
-    import Loom.Animation.EaseType;
-    import Loom.Animation.Tween;
-    import Loom.GameFramework.LoomGameObject;
-    import Loom.GameFramework.TickedComponent;
-    import Loom.GameFramework.TimeManager;
-    import Loom.Graphics.Point2;
-    import Loom2D.Display.Stage;
+	import Loom.Animation.EaseType;
+	import Loom.Animation.Tween;
+	import Loom.GameFramework.LoomGameObject;
+	import Loom.GameFramework.TickedComponent;
+	import Loom2D.Display.Stage;
     
     public delegate OrbDeathCallback(orb:OrbBehaviorComponent, object:LoomGameObject):void;
     
@@ -20,7 +18,7 @@ package
     public class OrbBehaviorComponent extends TickedComponent
     {
         [Inject]
-        protected var _gameLayer:Stage;
+        protected var _stage:Stage;
         protected var _designWidth:int;
         protected var _designHeight:int;
         
@@ -69,8 +67,8 @@ package
                 
             _actor = owner.lookupComponentByName("actor") as ActorComponent;
             
-            _designWidth = _gameLayer.stageWidth;
-            _designHeight = _gameLayer.stageHeight;
+            _designWidth = _stage.stageWidth;
+            _designHeight = _stage.stageHeight;
             
             _actor.radius = 32;
             _actor.position = MathUtils.randomPoint(100, 100, _designWidth - 100, _designHeight - 100);

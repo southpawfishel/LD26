@@ -1,8 +1,7 @@
 package
 {
-    import Loom.GameFramework.TickedComponent;
-    import Loom.GameFramework.TimeManager;
-    import Loom.Graphics.Point2;
+	import Loom.GameFramework.TickedComponent;
+	import Loom.Graphics.Point2;
     
     public class ActorComponent extends TickedComponent
     {

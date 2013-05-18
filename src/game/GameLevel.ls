@@ -1,18 +1,19 @@
 package
 {
-    import cocos2d.CCUserDefault;
-    import CocosDenshion.SimpleAudioEngine;
-    import Loom.GameFramework.ITicked;
-    import Loom.GameFramework.LoomGameObject;
-    import Loom.GameFramework.LoomGroup;
-    import Loom.GameFramework.TimeManager;
-    import Loom.Graphics.Point2;
-    import Loom.Platform.Timer;
-    import Loom2D.Display.Stage;
-    import Loom2D.Display.Quad;
-    import Loom2D.Events.Event;
-    import Loom2D.Events.TouchEvent;
-    import System.Platform.Platform;
+	import cocos2d.CCUserDefault;
+	import CocosDenshion.SimpleAudioEngine;
+	import Loom.GameFramework.ITicked;
+	import Loom.GameFramework.LoomGameObject;
+	import Loom.GameFramework.LoomGroup;
+	import Loom.GameFramework.TimeManager;
+	import Loom.Platform.Timer;
+	import Loom2D.Display.Image;
+	import Loom2D.Display.Quad;
+	import Loom2D.Display.Stage;
+	import Loom2D.Events.Event;
+	import Loom2D.Events.TouchEvent;
+	import Loom2D.Textures.Texture;
+	import System.Platform.Platform;
     
     public delegate GameBeganCallback():void;
     public delegate TimeChangedCallback(survivalTime:int, health:int, bestTime:int):void;
@@ -21,11 +22,12 @@ package
     public class GameLevel extends LoomGroup implements ITicked
     {
         [Inject]
-        private var _rootLayer:Stage;
+        private var _stage:Stage;
         [Inject]
         private var _timeManager:TimeManager;
         
         private var _bg:Quad;
+		private var _tempBG:Image;
         
         private var _playerOrb:LoomGameObject = null;
         private var _orbs:Vector.<LoomGameObject> = new Vector.<LoomGameObject>();
@@ -58,11 +60,16 @@ package
             
             _timeManager.addTickedObject(this);
             
-            _rootLayer.addEventListener(Event.TOUCH_DOWN, onTouchBegan);
+            _stage.addEventListener(Event.TOUCH_DOWN, onTouchBegan);
             
-            //_bg = new Quad(_rootLayer.width, _rootLayer.height, 0x646464);
+            //_bg = new Quad(_stage.stageWidth, _stage.stageHeight, 0x646464);
             //_bg.alpha = 1;
-            //_rootLayer.addChild(_bg);
+            //_stage.addChild(_bg);
+			_tempBG = new Image(Texture.fromAsset("assets/bg.png"));
+			_tempBG.width = _stage.stageWidth;
+			_tempBG.height = _stage.stageHeight;
+			_tempBG.color = 0;
+			_stage.addChild(_tempBG);
             
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
@@ -75,9 +82,10 @@ package
         
         override public function destroy()
         {
-            _rootLayer.removeChild(_bg, true);
+            //_stage.removeChild(_bg, true);
+			_stage.removeChild(_tempBG, true);
             
-            _rootLayer.removeEventListener(Event.TOUCH_DOWN, onTouchBegan);
+            _stage.removeEventListener(Event.TOUCH_DOWN, onTouchBegan);
             
             _timeManager.removeTickedObject(this);
             

@@ -1,12 +1,9 @@
 package
 {
-    import Loom.Animation.Tween;
-    import Loom.Animation.EaseType;
-    import Loom.LML.LML;
-    import Loom2D.Display.DisplayObjectContainer;
-    import Loom2D.UI.Label;
-    import UI.View;
-    import UI.ViewCallback;
+	import Loom.LML.LML;
+	import Loom2D.Display.DisplayObjectContainer;
+	import Loom2D.UI.Label;
+	import UI.View;
     
     public class HUDView extends View
     {
@@ -60,7 +57,7 @@ package
         
         public function onGameBegan()
         {
-            _startPrompt.alpha = 0;
+            _startPrompt.visible = false;
         }
         
         public function onTimeChanged(survivalTime:int, health:int, bestTime:int)
@@ -81,7 +78,7 @@ package
             
             if (_startPrompt)
             {
-                _startPrompt.alpha = 1;
+                _startPrompt.visible = true;
             }
             
             parent.setChildIndex(this, 10);
