@@ -64,7 +64,6 @@ package
             _stage.addEventListener(TouchEvent.TOUCH, onTouchBegan);
             
             _bg = new Quad(_stage.stageWidth, _stage.stageHeight, 0x646464);
-            _bg.alpha = 1;
             _stage.addChild(_bg);
             
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);

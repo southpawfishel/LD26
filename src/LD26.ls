@@ -24,9 +24,9 @@ package
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
             
-            stage.scaleMode = StageScaleMode.LETTERBOX;
             stage.stageWidth = 1024;
             stage.stageHeight = 768;
+            stage.scaleMode = StageScaleMode.LETTERBOX;
             
             _gameView = new GameView();
             
@@ -37,11 +37,6 @@ package
             _gameOverView.onFadeIn += onGameOverFadeIn;
             
             onGameStart();
-        }
-        
-        protected function getAspectRatio():Number
-        {
-            return (Cocos2D.getDisplayWidth() as Number) / (Cocos2D.getDisplayHeight() as Number);
         }
         
         public function onGameStart()

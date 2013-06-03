@@ -24,7 +24,6 @@ package
             
             _sprite = new TextureAtlasSprite();
             _sprite.atlasName = "sprites";
-            _sprite.center = true;
             _stage.addChild(_sprite);
                 
             onFrame();
@@ -68,6 +67,8 @@ package
             if (!_sprite) return;
             if (_sprite.textureName == value) return;
             _sprite.textureName = value;
+            _sprite.pivotX = _sprite.width / 2;
+            _sprite.pivotY = _sprite.height / 2;
         }
         
         public function set r(value:Number)

@@ -123,9 +123,10 @@ package
         
         protected function onTouchMoved(touch:Touch)
         {
-            if (_trackingDragId != touch.id) return;
-            
-            _actor.setPosition(touch.globalX, touch.globalY);
+            if (_trackingDrag && _trackingDragId == touch.id)
+            {
+                _actor.setPosition(touch.globalX, touch.globalY);
+            }
         }
         
         protected function onTouchEnded(touch:Touch)
