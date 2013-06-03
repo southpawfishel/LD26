@@ -1,12 +1,12 @@
 package
 {
 	import Loom.GameFramework.TickedComponent;
-	import Loom.Graphics.Point2;
+	import Loom2D.Math.Point;
     
     public class ActorComponent extends TickedComponent
     {
-        protected var _position:Point2 = new Point2(0, 0);
-        protected var _velocity:Point2 = new Point2(0, 0);
+        protected var _position:Point = new Point(0, 0);
+        protected var _velocity:Point = new Point(0, 0);
         protected var _scale:Number = 0;
         protected var _radius:Number = 0;
         protected var _r:int = 255, _g:int = 255, _b:int = 255;
@@ -36,12 +36,12 @@ package
             return _position.y;
         }
         
-        public function set position(value:Point2)
+        public function set position(value:Point)
         {
             _position = value;
         }
         
-        public function get position():Point2
+        public function get position():Point
         {
             return _position;
         }
@@ -52,12 +52,12 @@ package
             this.y = y;
         }
         
-        public function set velocity(value:Point2)
+        public function set velocity(value:Point)
         {
             _velocity = value;
         }
         
-        public function get velocity():Point2
+        public function get velocity():Point
         {
             return _velocity;
         }
@@ -122,11 +122,11 @@ package
         
         public function pointWithinRadius(x:Number, y:Number):Boolean
         {
-            var point = new Point2();
+            var point = new Point();
             point.x = x;
             point.y = y;
             
-            var distanceSquared = MathUtils.subtractPoint(_position, point).getSquareMagnitude();
+            var distanceSquared = MathUtils.squareDistance(_position, point);
             var collisionDistance = scaledRadius * scaledRadius;
             var collided = distanceSquared < collisionDistance;
             //trace("actual distance: " + distanceSquared + " collision distance: " + collisionDistance);

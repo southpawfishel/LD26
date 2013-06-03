@@ -1,6 +1,5 @@
 package
 {
-	import cocos2d.Cocos2D;
 	import CocosDenshion.SimpleAudioEngine;
 	import Loom2D.Display.Loom2DGame;
 	import Loom2D.Display.Sprite;
