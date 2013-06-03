@@ -9,8 +9,6 @@ package
     {
         [Inject]
         protected var _stage:Stage;
-        [Inject]
-        protected var _batchNode:Sprite;
     
         protected var _sprite:TextureAtlasSprite;
         protected var _texture:String;
@@ -36,7 +34,7 @@ package
         
         override public function onRemove()
         {
-            _batchNode.removeChild(_sprite, true);
+            _stage.removeChild(_sprite, true);
         
             super.onRemove();
         }
@@ -94,7 +92,6 @@ package
         public override function onFrame()
         {
             super.onFrame();
-            _sprite.render();
         }
     }
 }

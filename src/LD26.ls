@@ -9,8 +9,6 @@ package
 
     public class LD26 extends Loom2DGame
     {
-        private var _batchNode:Sprite = null;
-
         private var _gameView:GameView = null;
         private var _hud:HUDView;
         private var _gameOverView:GameOverView = null;
@@ -21,10 +19,7 @@ package
             
             TextureAtlasManager.register("sprites", "assets/");
 
-            _batchNode = new Sprite();
-            stage.addChild(_batchNode);
             group.registerManager(stage);
-            group.registerManager(_batchNode);
 
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);

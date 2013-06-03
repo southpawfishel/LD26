@@ -11,7 +11,9 @@ package
 	import Loom2D.Display.Quad;
 	import Loom2D.Display.Stage;
 	import Loom2D.Events.Event;
+    import Loom2D.Events.Touch;
 	import Loom2D.Events.TouchEvent;
+    import Loom2D.Events.TouchPhase;
 	import Loom2D.Textures.Texture;
 	import System.Platform.Platform;
     
@@ -27,7 +29,6 @@ package
         private var _timeManager:TimeManager;
         
         private var _bg:Quad;
-		private var _tempBG:Image;
         
         private var _playerOrb:LoomGameObject = null;
         private var _orbs:Vector.<LoomGameObject> = new Vector.<LoomGameObject>();
@@ -60,16 +61,11 @@ package
             
             _timeManager.addTickedObject(this);
             
-            _stage.addEventListener(Event.TOUCH_DOWN, onTouchBegan);
+            _stage.addEventListener(TouchEvent.TOUCH, onTouchBegan);
             
-            //_bg = new Quad(_stage.stageWidth, _stage.stageHeight, 0x646464);
-            //_bg.alpha = 1;
-            //_stage.addChild(_bg);
-			_tempBG = new Image(Texture.fromAsset("assets/bg.png"));
-			_tempBG.width = _stage.stageWidth;
-			_tempBG.height = _stage.stageHeight;
-			_tempBG.color = 0;
-			_stage.addChild(_tempBG);
+            _bg = new Quad(_stage.stageWidth, _stage.stageHeight, 0x646464);
+            _bg.alpha = 1;
+            _stage.addChild(_bg);
             
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
@@ -82,10 +78,7 @@ package
         
         override public function destroy()
         {
-            //_stage.removeChild(_bg, true);
-			_stage.removeChild(_tempBG, true);
-            
-            _stage.removeEventListener(Event.TOUCH_DOWN, onTouchBegan);
+            _stage.removeChild(_bg, true);
             
             _timeManager.removeTickedObject(this);
             
@@ -156,17 +149,23 @@ package
         {
             if (!_playerOrb)
             {
+                // Filter to only consider new touches.
+                var touch = event.getTouch(_stage, TouchPhase.BEGAN);
+                if (!touch) return;
+
                 // Reset timers
                 _gameStartTime = Platform.getTime();
                 _spawnTimer.start();
                 
                 // Spawn the player
-                spawnPlayerOrb(event.x, event.y);
+                spawnPlayerOrb(touch.globalX, touch.globalY);
                 var playerBehavior = _playerOrb.lookupComponentByName("behavior") as PlayerOrbComponent;
-                playerBehavior.onTouchBegan(event, event.data);
+                playerBehavior.onHandleTouch(event, event.data);
                 
                 _gameRunning = true;
                 onGameBegan();
+
+                _stage.removeEventListener(TouchEvent.TOUCH, onTouchBegan);
             }
         }
         

@@ -7,7 +7,9 @@ package
 	import Loom.GameFramework.TickedComponent;
 	import Loom2D.Display.Stage;
 	import Loom2D.Events.Event;
+    import Loom2D.Events.Touch;
 	import Loom2D.Events.TouchEvent;
+    import Loom2D.Events.TouchPhase;
 	import Loom2D.Math.Color;
     
     public delegate PlayerOrbDeathCallback(orb:PlayerOrbComponent, object:LoomGameObject):void;
@@ -26,7 +28,7 @@ package
         protected var _alive:Boolean = false;
         
         protected var _trackingDrag:Boolean = false;
-        protected var _trackingDragId:Object = null;
+        protected var _trackingDragId:int = 0;
         
         public static var GOOD_SFX = "assets/boop.wav";
         public static var BAD_SFX = "assets/beep.wav";
@@ -59,10 +61,7 @@ package
             _actor = owner.lookupComponentByName("actor") as ActorComponent;
             _actor.radius = 35;
                 
-            _stage.addEventListener(Event.TOUCH_DOWN, onTouchBegan);
-            // TODO
-            //_stage.onTouchMoved += onTouchMoved;
-            //_stage.onTouchEnded += onTouchEnded;
+            _stage.addEventListener(TouchEvent.TOUCH, onHandleTouch);
             
             _designWidth = _stage.stageWidth;
             _designHeight = _stage.stageHeight;
@@ -72,10 +71,7 @@ package
         
         override public function onRemove()
         {
-            _stage.removeEventListener(Event.TOUCH_DOWN, onTouchBegan);
-            // TODO
-            //_stage.onTouchMoved -= onTouchMoved;
-            //_stage.onTouchEnded -= onTouchEnded;
+            _stage.removeEventListener(TouchEvent.TOUCH, onHandleTouch);
             
             super.onRemove();
         }
@@ -86,10 +82,31 @@ package
             _actor.position.y = Math.clamp(_actor.position.y, _actor.scaledRadius, _designHeight - _actor.scaledRadius);
         }
         
-        public function onTouchBegan(event:TouchEvent, object:Object)
+        public function onHandleTouch(event:TouchEvent, object:Object)
+        {
+            var beganTouches:Vector.<Touch> = event.getTouches(_stage, TouchPhase.BEGAN);
+            for each (var bt in beganTouches)
+            {
+                this.onTouchBegan(bt);
+            }
+
+            var movedTouches:Vector.<Touch> = event.getTouches(_stage, TouchPhase.MOVED);
+            for each (var mt in movedTouches)
+            {
+                this.onTouchMoved(mt);
+            }
+
+            var endedTouches:Vector.<Touch> = event.getTouches(_stage, TouchPhase.ENDED);
+            for each (var et in endedTouches)
+            {
+                this.onTouchEnded(et);
+            }
+        }
+
+        protected function onTouchBegan(touch:Touch)
         {
             if (_trackingDrag) return;
-            if (_alive && !_actor.pointWithinRadius(event.x, event.y)) return;
+            if (_alive && !_actor.pointWithinRadius(touch.globalX, touch.globalY)) return;
             
             if (!_alive)
             {
@@ -100,23 +117,23 @@ package
             }
             
             _trackingDrag = true;
-            _trackingDragId = object;
-            _actor.setPosition(event.x, event.y);
+            _trackingDragId = touch.id;
+            _actor.setPosition(touch.globalX, touch.globalY);
         }
         
-        protected function onTouchMoved(id:int, touchX:Number, touchY:Number)
+        protected function onTouchMoved(touch:Touch)
         {
-            if (_trackingDragId != id) return;
+            if (_trackingDragId != touch.id) return;
             
-            _actor.setPosition(touchX, touchY);
+            _actor.setPosition(touch.globalX, touch.globalY);
         }
         
-        protected function onTouchEnded(id:int, touchX:Number, touchY:Number)
+        protected function onTouchEnded(touch:Touch)
         {
-            if (_trackingDrag && _trackingDragId == id)
+            if (_trackingDrag && _trackingDragId == touch.id)
             {
                 _trackingDrag = false;
-                _trackingDragId = null;
+                _trackingDragId = 0;
             }
         }
         

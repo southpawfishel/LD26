@@ -55,10 +55,10 @@ package
             restartGameTimer.onComplete = onStartFadeOut;
             restartGameTimer.start();
             
-            //_fadeToBlack = new Quad(5000, 5000, 0x000000);
-            //_fadeToBlack.center = true;
-            //_fadeToBlack.alpha = 0;
-            //addChild(_fadeToBlack);
+            _fadeToBlack = new Quad(5000, 5000, 0x000000);
+            _fadeToBlack.center = true;
+            _fadeToBlack.alpha = 0;
+            addChild(_fadeToBlack);
 			_tempBG = new Image(Texture.fromAsset("assets/bg.png"));
 			_tempBG.width = (parent as Stage).stageWidth;
 			_tempBG.height = (parent as Stage).stageHeight;
@@ -95,8 +95,8 @@ package
 
         public function onFadeFinished(tween:Tween):void
         {
-            //removeChild(_fadeToBlack, true);
-            //_fadeToBlack = null;
+            removeChild(_fadeToBlack, true);
+            _fadeToBlack = null;
 			removeChild(_tempBG, true);
 			_tempBG = null;
             
