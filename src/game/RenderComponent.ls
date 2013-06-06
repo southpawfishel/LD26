@@ -8,7 +8,7 @@ package
     public class RenderComponent extends AnimatedComponent
     {
         [Inject]
-        protected var _stage:Stage;
+        protected var _entityLayer:Sprite;
     
         protected var _sprite:TextureAtlasSprite;
         protected var _texture:String;
@@ -24,7 +24,7 @@ package
             
             _sprite = new TextureAtlasSprite();
             _sprite.atlasName = "sprites";
-            _stage.addChild(_sprite);
+            _entityLayer.addChild(_sprite);
                 
             onFrame();
             
@@ -33,7 +33,7 @@ package
         
         override public function onRemove()
         {
-            _stage.removeChild(_sprite, true);
+            _entityLayer.removeChild(_sprite, true);
         
             super.onRemove();
         }

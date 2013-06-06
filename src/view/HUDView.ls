@@ -2,6 +2,7 @@ package
 {
 	import Loom.LML.LML;
 	import Loom2D.Display.DisplayObjectContainer;
+    import Loom2D.Loom2D;
 	import Loom2D.UI.Label;
 	import UI.View;
     
@@ -31,7 +32,10 @@ package
         {
             if (_startPrompt)
             {
-                _startPrompt.center = true;
+                _startPrompt.x = Loom2D.stage.stageWidth / 2;
+                _startPrompt.y = Loom2D.stage.stageHeight / 2;
+                _startPrompt.pivotX = _startPrompt.width / 2;
+                _startPrompt.pivotY = _startPrompt.height / 2;
             }
             if (_time)
             {
@@ -63,7 +67,7 @@ package
         public function onTimeChanged(survivalTime:int, health:int, bestTime:int)
         {
             _time.text = "Survival Time: " + Math.round(survivalTime / 1000);
-            _health.text = "Health: " + health;
+            //_health.text = "Health: " + health;
             _bestTime.text = "Longest Run: " + Math.round(bestTime / 1000);
         }
         

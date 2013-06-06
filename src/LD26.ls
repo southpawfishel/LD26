@@ -18,14 +18,13 @@ package
             
             TextureAtlasManager.register("sprites", "assets/");
 
-            group.registerManager(stage);
-
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
             
             stage.stageWidth = 1024;
             stage.stageHeight = 768;
             stage.scaleMode = StageScaleMode.LETTERBOX;
+            stage.color = 0x646464;
             
             _gameView = new GameView();
             

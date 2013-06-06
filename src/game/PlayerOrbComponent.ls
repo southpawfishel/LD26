@@ -10,6 +10,7 @@ package
     import Loom2D.Events.Touch;
 	import Loom2D.Events.TouchEvent;
     import Loom2D.Events.TouchPhase;
+    import Loom2D.Loom2D;
 	import Loom2D.Math.Color;
     
     public delegate PlayerOrbDeathCallback(orb:PlayerOrbComponent, object:LoomGameObject):void;
@@ -17,8 +18,6 @@ package
     
     public class PlayerOrbComponent extends TickedComponent
     {
-        [Inject]
-        protected var _stage:Stage;
         protected var _designWidth:int;
         protected var _designHeight:int;
         
@@ -61,17 +60,17 @@ package
             _actor = owner.lookupComponentByName("actor") as ActorComponent;
             _actor.radius = 35;
                 
-            _stage.addEventListener(TouchEvent.TOUCH, onHandleTouch);
+            Loom2D.stage.addEventListener(TouchEvent.TOUCH, onHandleTouch);
             
-            _designWidth = _stage.stageWidth;
-            _designHeight = _stage.stageHeight;
+            _designWidth = Loom2D.stage.stageWidth;
+            _designHeight = Loom2D.stage.stageHeight;
             
             return true;
         }
         
         override public function onRemove()
         {
-            _stage.removeEventListener(TouchEvent.TOUCH, onHandleTouch);
+            Loom2D.stage.removeEventListener(TouchEvent.TOUCH, onHandleTouch);
             
             super.onRemove();
         }
@@ -84,19 +83,19 @@ package
         
         public function onHandleTouch(event:TouchEvent, object:Object)
         {
-            var beganTouches:Vector.<Touch> = event.getTouches(_stage, TouchPhase.BEGAN);
+            var beganTouches:Vector.<Touch> = event.getTouches(Loom2D.stage, TouchPhase.BEGAN);
             for each (var bt in beganTouches)
             {
                 this.onTouchBegan(bt);
             }
 
-            var movedTouches:Vector.<Touch> = event.getTouches(_stage, TouchPhase.MOVED);
+            var movedTouches:Vector.<Touch> = event.getTouches(Loom2D.stage, TouchPhase.MOVED);
             for each (var mt in movedTouches)
             {
                 this.onTouchMoved(mt);
             }
 
-            var endedTouches:Vector.<Touch> = event.getTouches(_stage, TouchPhase.ENDED);
+            var endedTouches:Vector.<Touch> = event.getTouches(Loom2D.stage, TouchPhase.ENDED);
             for each (var et in endedTouches)
             {
                 this.onTouchEnded(et);

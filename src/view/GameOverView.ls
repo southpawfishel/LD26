@@ -7,6 +7,7 @@ package
 	import Loom2D.Display.Image;
 	import Loom2D.Display.Quad;
 	import Loom2D.Display.Stage;
+    import Loom2D.Loom2D;
 	import Loom2D.Textures.Texture;
 	import Loom2D.UI.Label;
 	import UI.View;
@@ -36,9 +37,9 @@ package
         
         public function get alpha():int
         {
-            if (_tempBG)
+            if (_fadeToBlack)
             {
-                return _tempBG.alpha;
+                return _fadeToBlack.alpha;
             }
         }
         
@@ -55,26 +56,23 @@ package
             restartGameTimer.onComplete = onStartFadeOut;
             restartGameTimer.start();
             
-            _fadeToBlack = new Quad(5000, 5000, 0x000000);
+            _fadeToBlack = new Quad(Loom2D.stage.stageWidth, Loom2D.stage.stageHeight, 0x000000);
             _fadeToBlack.center = true;
             _fadeToBlack.alpha = 0;
             addChild(_fadeToBlack);
-			_tempBG = new Image(Texture.fromAsset("assets/bg.png"));
-			_tempBG.width = (parent as Stage).stageWidth;
-			_tempBG.height = (parent as Stage).stageHeight;
-			_tempBG.color = 0;
-			addChild(_tempBG);
             
             _gameOver = new Label();
             _gameOver.fontFile = "assets/Curse-hd.fnt";
             _gameOver.text = "GAME OVER";
+            _gameOver.x = Loom2D.stage.stageWidth / 2;
+            _gameOver.y = Loom2D.stage.stageHeight / 2;
+            _gameOver.pivotX = _gameOver.width / 2;
+            _gameOver.pivotY = _gameOver.height / 2;
             _gameOver.scale = 0.5;
-            _gameOver.x = 512; _gameOver.y = 384;
-            _gameOver.center = true;
             _gameOver.alpha = 0;
             addChild(_gameOver);
             
-            Tween.to(this, 0.5, { "alpha" : 255 }).onComplete = function(tween:Tween)
+            Tween.to(this, 0.5, { "alpha" : 1 }).onComplete = function(tween:Tween)
             {
                 onFadeIn();
             }
@@ -97,8 +95,6 @@ package
         {
             removeChild(_fadeToBlack, true);
             _fadeToBlack = null;
-			removeChild(_tempBG, true);
-			_tempBG = null;
             
             removeChild(_gameOver, true);
             _gameOver = null;
