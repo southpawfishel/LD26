@@ -77,8 +77,6 @@ package
         
         override public function destroy()
         {
-            Loom2D.stage.removeChild(_entityLayer, true);
-            
             _timeManager.removeTickedObject(this);
             
             if (_playerOrb)
@@ -90,6 +88,8 @@ package
             {
                 orb.destroy();
             }
+
+		    Loom2D.stage.removeChild(_entityLayer, true);
         
             super.destroy();
         }
