@@ -1,22 +1,22 @@
 package
 {
 	import cocos2d.CCUserDefault;
-	import CocosDenshion.SimpleAudioEngine;
-	import Loom.GameFramework.ITicked;
-	import Loom.GameFramework.LoomGameObject;
-	import Loom.GameFramework.LoomGroup;
-	import Loom.GameFramework.TimeManager;
-	import Loom.Platform.Timer;
-	import Loom2D.Display.Image;
-    import Loom2D.Display.Sprite;
-	import Loom2D.Display.Stage;
-	import Loom2D.Events.Event;
-    import Loom2D.Events.Touch;
-	import Loom2D.Events.TouchEvent;
-    import Loom2D.Events.TouchPhase;
-    import Loom2D.Loom2D;
-	import Loom2D.Textures.Texture;
-	import System.Platform.Platform;
+	import cocosdenshion.SimpleAudioEngine;
+	import loom.gameframework.ITicked;
+	import loom.gameframework.LoomGameObject;
+	import loom.gameframework.LoomGroup;
+	import loom.gameframework.TimeManager;
+	import loom.platform.Timer;
+	import loom2d.display.Image;
+    import loom2d.display.Sprite;
+	import loom2d.display.Stage;
+	import loom2d.events.Event;
+    import loom2d.events.Touch;
+	import loom2d.events.TouchEvent;
+    import loom2d.events.TouchPhase;
+    import loom2d.Loom2D;
+	import loom2d.textures.Texture;
+	import system.platform.Platform;
     
     public delegate GameBeganCallback():void;
     public delegate TimeChangedCallback(survivalTime:int, health:int, bestTime:int):void;

@@ -1,17 +1,17 @@
 package
 {
-	import CocosDenshion.SimpleAudioEngine;
-	import Loom.Animation.EaseType;
-	import Loom.Animation.Tween;
-	import Loom.GameFramework.LoomGameObject;
-	import Loom.GameFramework.TickedComponent;
-	import Loom2D.Display.Stage;
-	import Loom2D.Events.Event;
-    import Loom2D.Events.Touch;
-	import Loom2D.Events.TouchEvent;
-    import Loom2D.Events.TouchPhase;
-    import Loom2D.Loom2D;
-	import Loom2D.Math.Color;
+	import cocosdenshion.SimpleAudioEngine;
+	import loom.animation.EaseType;
+	import loom.animation.Tween;
+	import loom.gameframework.LoomGameObject;
+	import loom.gameframework.TickedComponent;
+	import loom2d.display.Stage;
+	import loom2d.events.Event;
+    import loom2d.events.Touch;
+	import loom2d.events.TouchEvent;
+    import loom2d.events.TouchPhase;
+    import loom2d.Loom2D;
+	import loom2d.math.Color;
     
     public delegate PlayerOrbDeathCallback(orb:PlayerOrbComponent, object:LoomGameObject):void;
     public delegate PolarityChangedCallback(polarity:int):void;

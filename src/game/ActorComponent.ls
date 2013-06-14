@@ -1,7 +1,7 @@
 package
 {
-	import Loom.GameFramework.TickedComponent;
-	import Loom2D.Math.Point;
+	import loom.gameframework.TickedComponent;
+	import loom2d.math.Point;
     
     public class ActorComponent extends TickedComponent
     {

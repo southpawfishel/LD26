@@ -1,10 +1,10 @@
 package
 {
-	import Loom.LML.LML;
-	import Loom2D.Display.DisplayObjectContainer;
-    import Loom2D.Loom2D;
-	import Loom2D.UI.Label;
-	import UI.View;
+	import loom.lml.LML;
+	import loom2d.display.DisplayObjectContainer;
+    import loom2d.Loom2D;
+	import loom2d.ui.Label;
+	import ui.View;
     
     public class HUDView extends View
     {

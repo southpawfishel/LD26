@@ -1,9 +1,9 @@
 package
 {
-	import Loom.GameFramework.AnimatedComponent;
-	import Loom2D.Display.Sprite;
-	import Loom2D.Display.Stage;
-	import Loom2D.UI.TextureAtlasSprite;
+	import loom.gameframework.AnimatedComponent;
+	import loom2d.display.Sprite;
+	import loom2d.display.Stage;
+	import loom2d.ui.TextureAtlasSprite;
     
     public class RenderComponent extends AnimatedComponent
     {

@@ -1,6 +1,6 @@
-package UI
+package ui
 {
-    import Loom2D.Display.DisplayObjectContainer;
+    import loom2d.display.DisplayObjectContainer;
 
     public delegate ViewCallback():void;
 

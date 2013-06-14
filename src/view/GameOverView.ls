@@ -1,17 +1,17 @@
 package
 {
     
-	import Loom.Animation.Tween;
-	import Loom.Platform.Timer;
-	import Loom2D.Display.DisplayObjectContainer;
-	import Loom2D.Display.Image;
-	import Loom2D.Display.Quad;
-	import Loom2D.Display.Stage;
-    import Loom2D.Loom2D;
-	import Loom2D.Textures.Texture;
-	import Loom2D.UI.Label;
-	import UI.View;
-	import UI.ViewCallback;
+	import loom.animation.Tween;
+	import loom.platform.Timer;
+	import loom2d.display.DisplayObjectContainer;
+	import loom2d.display.Image;
+	import loom2d.display.Quad;
+	import loom2d.display.Stage;
+    import loom2d.Loom2D;
+	import loom2d.textures.Texture;
+	import loom2d.ui.Label;
+	import ui.View;
+	import ui.ViewCallback;
     
     public class GameOverView extends View
     {
@@ -57,7 +57,6 @@ package
             restartGameTimer.start();
             
             _fadeToBlack = new Quad(Loom2D.stage.stageWidth, Loom2D.stage.stageHeight, 0x000000);
-            _fadeToBlack.center = true;
             _fadeToBlack.alpha = 0;
             addChild(_fadeToBlack);
             

@@ -1,7 +1,7 @@
 package
 {
-	import Loom2D.Display.DisplayObjectContainer;
-	import UI.View;
+	import loom2d.display.DisplayObjectContainer;
+	import ui.View;
     
     
     public class GameView extends View

@@ -1,12 +1,13 @@
 package
 {
-	import CocosDenshion.SimpleAudioEngine;
-	import Loom2D.Display.Loom2DGame;
-	import Loom2D.Display.Sprite;
-	import Loom2D.Display.StageScaleMode;
-	import Loom2D.UI.TextureAtlasManager;
+	import cocosdenshion.SimpleAudioEngine;
+    import loom.Application;
+    import loom.graphics.Graphics;
+	import loom2d.display.Sprite;
+	import loom2d.display.StageScaleMode;
+	import loom2d.ui.TextureAtlasManager;
 
-    public class LD26 extends Loom2DGame
+    public class LD26 extends Application
     {
         private var _gameView:GameView = null;
         private var _hud:HUDView;
@@ -15,6 +16,8 @@ package
         override public function run():void
         {
             super.run();
+
+            Graphics.setDebug(Graphics.DEBUG_TEXT);
             
             TextureAtlasManager.register("sprites", "assets/");
 

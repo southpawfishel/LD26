@@ -1,11 +1,11 @@
 package
 {
-	import Loom.Animation.EaseType;
-	import Loom.Animation.Tween;
-	import Loom.GameFramework.LoomGameObject;
-	import Loom.GameFramework.TickedComponent;
-	import Loom2D.Display.Stage;
-    import Loom2D.Loom2D;
+	import loom.animation.EaseType;
+	import loom.animation.Tween;
+	import loom.gameframework.LoomGameObject;
+	import loom.gameframework.TickedComponent;
+	import loom2d.display.Stage;
+    import loom2d.Loom2D;
     
     public delegate OrbDeathCallback(orb:OrbBehaviorComponent, object:LoomGameObject):void;
     
