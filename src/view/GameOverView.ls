@@ -23,26 +23,6 @@ package
         protected var _fadeToBlack:Quad = null;
 		protected var _tempBG:Image = null;
         
-        public function set alpha(value:Number)
-        {
-            if (_fadeToBlack)
-            {
-                _fadeToBlack.alpha = value;
-            }
-            if (_gameOver)
-            {
-                _gameOver.alpha = value;
-            }
-        }
-        
-        public function get alpha():int
-        {
-            if (_fadeToBlack)
-            {
-                return _fadeToBlack.alpha;
-            }
-        }
-        
         public function GameOverView()
         {
             super();
@@ -71,7 +51,8 @@ package
             _gameOver.alpha = 0;
             addChild(_gameOver);
             
-            Tween.to(this, 0.5, { "alpha" : 1 }).onComplete = function(tween:Tween)
+            Tween.to(_gameOver, 0.5, { "alpha" : 1 });
+            Tween.to(_fadeToBlack, 0.5, { "alpha" : 1 }).onComplete = function(tween:Tween)
             {
                 onFadeIn();
             }
@@ -81,7 +62,8 @@ package
         
         public function exit()
         {
-            Tween.to(this, 0.5, { "alpha" : 0 }).onComplete = onFadeFinished;
+            Tween.to(_gameOver, 0.5, { "alpha" : 0 });
+            Tween.to(_fadeToBlack, 0.5, { "alpha" : 0 }).onComplete = onFadeFinished;
         }
         
         public function onStartFadeOut(timer:Timer):void

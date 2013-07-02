@@ -46,7 +46,6 @@ package
         protected var _bestTime:int = 0;
         
         public var onGameBegan:GameBeganCallback = new GameBeganCallback();
-        public var onPolarityChanged:PolarityChangedCallback = new PolarityChangedCallback();
         public var onTimeChanged:TimeChangedCallback = new TimeChangedCallback();
         public var onGameOver:GameOverCallback = new GameOverCallback();
     
@@ -88,10 +87,10 @@ package
             {
                 orb.destroy();
             }
-
-		    Loom2D.stage.removeChild(_entityLayer, true);
         
             super.destroy();
+
+		    Loom2D.stage.removeChild(_entityLayer, true);
         }
         
         public function onTick()
@@ -242,8 +241,6 @@ package
                 _playerGettingHurt = true;
                 _playerHurtPreviousTime = Platform.getTime();
             }
-            
-            onPolarityChanged(polarity);
         }
     }
 }

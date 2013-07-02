@@ -28,6 +28,7 @@ package
             stage.stageHeight = 768;
             stage.scaleMode = StageScaleMode.LETTERBOX;
             stage.color = 0x646464;
+			stage.reportFps = true;
             
             _gameView = new GameView();
             
@@ -48,7 +49,6 @@ package
             
             _gameView.level.onGameBegan += _hud.onGameBegan;
             _gameView.level.onTimeChanged += _hud.onTimeChanged;
-            _gameView.level.onPolarityChanged += _hud.onPolarityChanged;
             _hud.enter(stage);
         }
         
