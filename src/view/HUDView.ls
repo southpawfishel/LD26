@@ -4,54 +4,28 @@ package
     import loom2d.Loom2D;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.math.Point;
-	import loom2d.text.BitmapFont;
 	import loom2d.ui.Label;
 	import ui.View;
     
     public class HUDView extends View
     {
-        //[Bind]
+        [Bind]
         protected var _time:Label;
-        //[Bind]
+        [Bind]
         protected var _health:Label;
-        //[Bind]
+        [Bind]
         protected var _bestTime:Label;
-        //[Bind]
+        [Bind]
         protected var _startPrompt:Label;
         
         public function HUDView()
         {
             super();
 
-/*            var doc = LML.bind("assets/hud.lml", this);
+            var doc = LML.bind("assets/hud.lml", this);
             doc.onLMLCreated = onLMLCreated;
-            doc.apply();*/
-			createLabels();
+            doc.apply();
         }
-
-		protected function createLabels()
-		{
-			_time = new Label("assets/Curse-hd.fnt", new Point(200, 100));
-			_time.scale = 0.4;
-			_time.x = 10;
-			_time.y = 0;
-			addChild(_time);
-			_health = new Label("assets/Curse-hd.fnt", new Point(200, 100));
-			_health.scale = 0.4;
-			_health.x = 10;
-			_health.y = 20;
-			addChild(_health);
-			_bestTime = new Label("assets/Curse-hd.fnt", new Point(200, 100));
-			_bestTime.scale = 0.4;
-			_bestTime.x = 10;
-			_bestTime.y = 40;
-			addChild(_bestTime);
-			_startPrompt = new Label("assets/Curse-hd.fnt", new Point(400, 50));
-			_startPrompt.text = "Touch Anywhere to Start";
-			addChild(_startPrompt);
-			
-			onLMLCreated();
-		}
 
         protected function onLMLCreated()
         {
@@ -59,8 +33,7 @@ package
             {
                 _startPrompt.x = Loom2D.stage.stageWidth / 2;
                 _startPrompt.y = Loom2D.stage.stageHeight / 2;
-                _startPrompt.pivotX = _startPrompt.width / 2;
-                _startPrompt.pivotY = _startPrompt.height / 2;
+                _startPrompt.center();
             }
             if (_time)
             {
@@ -87,7 +60,7 @@ package
         public function onTimeChanged(survivalTime:int, health:int, bestTime:int)
         {
             _time.text = "Survival Time: " + Math.round(survivalTime / 1000);
-            //_health.text = "Health: " + health;
+            _health.text = "Health: " + health;
             _bestTime.text = "Longest Run: " + Math.round(bestTime / 1000);
         }
         
