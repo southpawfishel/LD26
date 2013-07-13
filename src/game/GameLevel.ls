@@ -1,24 +1,22 @@
 package
 {
-    import Loom.GameFramework.LoomGameObject;
-    import Loom.GameFramework.LoomGroup;
-    import Loom.GameFramework.ITicked;
-    import Loom.GameFramework.TimeManager;
-    import Loom.Graphics.Point2;
-    import Loom.Platform.Timer;
-    
-    import CocosDenshion.SimpleAudioEngine;
-    import cocos2d.ccColor4B;
-    import cocos2d.CCLayerColor;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.CCSpriteBatchNode;
-    import cocos2d.CCPoint;
-    import cocos2d.CCSize;
-    import cocos2d.CCArray;
-    import cocos2d.CCDictionary;
-    import cocos2d.CCUserDefault;
-    
-    import System.Platform.Platform;
+	import cocos2d.CCUserDefault;
+	import cocosdenshion.SimpleAudioEngine;
+	import loom.gameframework.ITicked;
+	import loom.gameframework.LoomGameObject;
+	import loom.gameframework.LoomGroup;
+	import loom.gameframework.TimeManager;
+	import loom.platform.Timer;
+	import loom2d.display.Image;
+    import loom2d.display.Sprite;
+	import loom2d.display.Stage;
+	import loom2d.events.Event;
+    import loom2d.events.Touch;
+	import loom2d.events.TouchEvent;
+    import loom2d.events.TouchPhase;
+    import loom2d.Loom2D;
+	import loom2d.textures.Texture;
+	import system.platform.Platform;
     
     public delegate GameBeganCallback():void;
     public delegate TimeChangedCallback(survivalTime:int, health:int, bestTime:int):void;
@@ -27,11 +25,9 @@ package
     public class GameLevel extends LoomGroup implements ITicked
     {
         [Inject]
-        private var _rootLayer:CCScaledLayer;
-        [Inject]
         private var _timeManager:TimeManager;
         
-        private var _bg:CCLayerColor;
+        private var _entityLayer:Sprite = null;
         
         private var _playerOrb:LoomGameObject = null;
         private var _orbs:Vector.<LoomGameObject> = new Vector.<LoomGameObject>();
@@ -50,7 +46,6 @@ package
         protected var _bestTime:int = 0;
         
         public var onGameBegan:GameBeganCallback = new GameBeganCallback();
-        public var onPolarityChanged:PolarityChangedCallback = new PolarityChangedCallback();
         public var onTimeChanged:TimeChangedCallback = new TimeChangedCallback();
         public var onGameOver:GameOverCallback = new GameOverCallback();
     
@@ -64,15 +59,11 @@ package
             
             _timeManager.addTickedObject(this);
             
-            _rootLayer.onTouchBegan += onTouchBegan;
-            
-            var bgColor:ccColor4B = new ccColor4B();
-            bgColor.r = 100;
-            bgColor.g = 100;
-            bgColor.b = 100;
-            bgColor.a = 255;
-            _bg = CCLayerColor.create(bgColor, _rootLayer.designWidth, _rootLayer.designHeight);
-            _rootLayer.addChild(_bg);
+            Loom2D.stage.addEventListener(TouchEvent.TOUCH, onTouchBegan);
+
+            _entityLayer = new Sprite();
+            Loom2D.stage.addChild(_entityLayer);
+            registerManager(_entityLayer);
             
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.GOOD_SFX);
             SimpleAudioEngine.sharedEngine().preloadEffect(PlayerOrbComponent.BAD_SFX);
@@ -85,10 +76,6 @@ package
         
         override public function destroy()
         {
-            _rootLayer.removeChild(_bg, true);
-            
-            _rootLayer.onTouchBegan -= onTouchBegan;
-            
             _timeManager.removeTickedObject(this);
             
             if (_playerOrb)
@@ -102,6 +89,8 @@ package
             }
         
             super.destroy();
+
+		    Loom2D.stage.removeChild(_entityLayer, true);
         }
         
         public function onTick()
@@ -154,23 +143,31 @@ package
             onTimeChanged(_survivalTime, _timeUntilDeath, _bestTime);
         }
         
-        public function onTouchBegan(id:int, touchX:Number, touchY:Number)
+        public function onTouchBegan(event:TouchEvent)
         {
             if (!_playerOrb)
             {
+                // Filter to only consider new touches.
+                var touch = event.getTouch(Loom2D.stage, TouchPhase.BEGAN);
+                if (!touch) return;
+
                 // Reset timers
                 _gameStartTime = Platform.getTime();
                 _spawnTimer.start();
                 
                 // Spawn the player
-                spawnPlayerOrb(id, touchX, touchY);
+                spawnPlayerOrb(touch.globalX, touch.globalY);
+                var playerBehavior = _playerOrb.lookupComponentByName("behavior") as PlayerOrbComponent;
+                playerBehavior.onHandleTouch(event, event.data);
                 
                 _gameRunning = true;
                 onGameBegan();
+
+                Loom2D.stage.removeEventListener(TouchEvent.TOUCH, onTouchBegan);
             }
         }
         
-        protected function spawnPlayerOrb(id:int, touchX:Number, touchY:Number)
+        protected function spawnPlayerOrb(touchX:Number, touchY:Number)
         {
             var orbObject = new LoomGameObject();
             var orbActor = new ActorComponent();
@@ -191,7 +188,7 @@ package
             orbRenderer.addBinding("r", "@actor.r");
             orbRenderer.addBinding("g", "@actor.g");
             orbRenderer.addBinding("b", "@actor.b");
-            orbRenderer.addBinding("opacity", "@actor.opacity");
+            orbRenderer.addBinding("alpha", "@actor.alpha");
             
             orbObject.owningGroup = this;
             orbObject.initialize();
@@ -216,7 +213,7 @@ package
             orbRenderer.addBinding("y", "@actor.y");
             orbRenderer.addBinding("texture", "@behavior.texture");
             orbRenderer.addBinding("scale", "@actor.scale");
-            orbRenderer.addBinding("opacity", "@actor.opacity");
+            orbRenderer.addBinding("alpha", "@actor.alpha");
             
             orbObject.owningGroup = this;
             orbObject.initialize();
@@ -244,8 +241,6 @@ package
                 _playerGettingHurt = true;
                 _playerHurtPreviousTime = Platform.getTime();
             }
-            
-            onPolarityChanged(polarity);
         }
     }
 }

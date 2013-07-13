@@ -1,24 +1,23 @@
 package
 {
-    import Loom.GameFramework.LoomGameObject;
-    import Loom.GameFramework.TickedComponent;
-    import Loom.GameFramework.TimeManager;
-    import Loom.Graphics.Point2;
-    
-    import Loom.Animation.Tween;
-    import Loom.Animation.EaseType;
-    
-    import CocosDenshion.SimpleAudioEngine;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.ccColor3B;
+	import cocosdenshion.SimpleAudioEngine;
+	import loom.animation.LoomEaseType;
+	import loom.animation.LoomTween;
+	import loom.gameframework.LoomGameObject;
+	import loom.gameframework.TickedComponent;
+	import loom2d.display.Stage;
+	import loom2d.events.Event;
+    import loom2d.events.Touch;
+	import loom2d.events.TouchEvent;
+    import loom2d.events.TouchPhase;
+    import loom2d.Loom2D;
+	import loom2d.math.Color;
     
     public delegate PlayerOrbDeathCallback(orb:PlayerOrbComponent, object:LoomGameObject):void;
     public delegate PolarityChangedCallback(polarity:int):void;
     
     public class PlayerOrbComponent extends TickedComponent
     {
-        [Inject]
-        protected var _gameLayer:CCScaledLayer;
         protected var _designWidth:int;
         protected var _designHeight:int;
         
@@ -28,7 +27,7 @@ package
         protected var _alive:Boolean = false;
         
         protected var _trackingDrag:Boolean = false;
-        protected var _trackingDragId:int = -1;
+        protected var _trackingDragId:int = 0;
         
         public static var GOOD_SFX = "assets/boop.wav";
         public static var BAD_SFX = "assets/beep.wav";
@@ -50,7 +49,7 @@ package
         
         public function PlayerOrbComponent()
         {
-            texture = "whiteorb.png";
+            texture = "whiteorb";
         }
         
         override public function onAdd():Boolean
@@ -61,21 +60,17 @@ package
             _actor = owner.lookupComponentByName("actor") as ActorComponent;
             _actor.radius = 35;
                 
-            _gameLayer.onTouchBegan += onTouchBegan;
-            _gameLayer.onTouchMoved += onTouchMoved;
-            _gameLayer.onTouchEnded += onTouchEnded;
+            Loom2D.stage.addEventListener(TouchEvent.TOUCH, onHandleTouch);
             
-            _designWidth = _gameLayer.designWidth;
-            _designHeight = _gameLayer.designHeight;
+            _designWidth = Loom2D.stage.stageWidth;
+            _designHeight = Loom2D.stage.stageHeight;
             
             return true;
         }
         
         override public function onRemove()
         {
-            _gameLayer.onTouchBegan -= onTouchBegan;
-            _gameLayer.onTouchMoved -= onTouchMoved;
-            _gameLayer.onTouchEnded -= onTouchEnded;
+            Loom2D.stage.removeEventListener(TouchEvent.TOUCH, onHandleTouch);
             
             super.onRemove();
         }
@@ -86,37 +81,59 @@ package
             _actor.position.y = Math.clamp(_actor.position.y, _actor.scaledRadius, _designHeight - _actor.scaledRadius);
         }
         
-        public function onTouchBegan(id:int, touchX:Number, touchY:Number)
+        public function onHandleTouch(event:TouchEvent, object:Object)
+        {
+            var beganTouches:Vector.<Touch> = event.getTouches(Loom2D.stage, TouchPhase.BEGAN);
+            for each (var bt in beganTouches)
+            {
+                this.onTouchBegan(bt);
+            }
+
+            var movedTouches:Vector.<Touch> = event.getTouches(Loom2D.stage, TouchPhase.MOVED);
+            for each (var mt in movedTouches)
+            {
+                this.onTouchMoved(mt);
+            }
+
+            var endedTouches:Vector.<Touch> = event.getTouches(Loom2D.stage, TouchPhase.ENDED);
+            for each (var et in endedTouches)
+            {
+                this.onTouchEnded(et);
+            }
+        }
+
+        protected function onTouchBegan(touch:Touch)
         {
             if (_trackingDrag) return;
-            if (_alive && !_actor.pointWithinRadius(touchX, touchY)) return;
+            if (_alive && !_actor.pointWithinRadius(touch.globalX, touch.globalY)) return;
             
             if (!_alive)
             {
-                Tween.to(_actor, 0.15, { "scale" : 1, "opacity" : 255, "ease" : EaseType.EASE_IN }).onComplete += function()
+                LoomTween.to(_actor, 0.15, { "scale" : 1, "alpha" : 1, "ease" : LoomEaseType.EASE_IN }).onComplete += function()
                 {
                     _alive = true;
                 }
             }
             
             _trackingDrag = true;
-            _trackingDragId = id;
-            _actor.setPosition(touchX, touchY);
+            _trackingDragId = touch.id;
+            _actor.setPosition(touch.globalX, touch.globalY);
         }
         
-        protected function onTouchMoved(id:int, touchX:Number, touchY:Number)
+        protected function onTouchMoved(touch:Touch)
         {
-            if (_trackingDragId != id) return;
-            
-            _actor.setPosition(touchX, touchY);
+            if (_trackingDrag && _trackingDragId == touch.id)
+            {
+                _actor.setPosition(touch.globalX, touch.globalY);
+            }
         }
         
-        protected function onTouchEnded(id:int, touchX:Number, touchY:Number)
+        protected function onTouchEnded(touch:Touch)
         {
-            if (_trackingDrag && _trackingDragId == id)
+            if (_trackingDrag && _trackingDragId == touch.id)
             {
                 _trackingDrag = false;
-                _trackingDragId = -1;
+                _trackingDragId = 0;
             }
         }
         
@@ -162,21 +179,21 @@ package
             onPolarityChanged(_polarity);
             
             // Determine our dominant color based on what we've absorbed
-            var dominantColor = new ccColor3B(255, 255, 255);
+            var dominantColor = new Color(255, 255, 255, 255);
             if (_polarity < 0)
             {
-                dominantColor = ColorUtils.intToRGB(OrbBehaviorComponent.colors[0]);
+                dominantColor = Color.fromInteger(OrbBehaviorComponent.colors[0]);
             }
             else if (_polarity > 0)
             {
-                dominantColor = ColorUtils.intToRGB(OrbBehaviorComponent.colors[1]);
+                dominantColor = Color.fromInteger(OrbBehaviorComponent.colors[1]);
             }
             
             // Scale based on our polarity
             var newScale = 1.0 + (0.1 * Math.abs(_polarity));
             
-            // Tween to these new values
-            Tween.to(_actor, 0.2, { "r" : dominantColor.r, "g" : dominantColor.g, "b" : dominantColor.b, "scale" : newScale });
+            // LoomTween to these new values
+            LoomTween.to(_actor, 0.2, { "r" : dominantColor.red, "g" : dominantColor.green, "b" : dominantColor.blue, "scale" : newScale });
             
             // Kill the orb we collided with
             behavior.kill();

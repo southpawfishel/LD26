@@ -1,22 +1,16 @@
 package
 {
-    import Loom.GameFramework.AnimatedComponent;
-    
-    import cocos2d.CCSprite;
-    import cocos2d.CCSpriteFrame;
-    import cocos2d.CCSpriteFrameCache;
-    import cocos2d.CCSpriteBatchNode;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.ccColor3B;
+	import loom.gameframework.AnimatedComponent;
+	import loom2d.display.Sprite;
+	import loom2d.display.Stage;
+	import loom2d.ui.TextureAtlasSprite;
     
     public class RenderComponent extends AnimatedComponent
     {
         [Inject]
-        protected var _gameLayer:CCScaledLayer;
-        [Inject]
-        protected var _batchNode:CCSpriteBatchNode;
+        protected var _entityLayer:Sprite;
     
-        protected var _sprite:CCSprite;
+        protected var _sprite:TextureAtlasSprite;
         protected var _texture:String;
         
         public function RenderComponent()
@@ -28,8 +22,9 @@ package
             if (!super.onAdd())
                 return false;
             
-            _sprite = CCSprite.createFromFile("assets/sprites.png");
-            _batchNode.addChild(_sprite);
+            _sprite = new TextureAtlasSprite();
+            _sprite.atlasName = "sprites";
+            _entityLayer.addChild(_sprite);
                 
             onFrame();
             
@@ -38,7 +33,7 @@ package
         
         override public function onRemove()
         {
-            _batchNode.removeChild(_sprite, true);
+            _entityLayer.removeChild(_sprite, true);
         
             super.onRemove();
         }
@@ -61,35 +56,39 @@ package
             _sprite.scale = value;
         }
         
-        public function set opacity(value:int)
+        public function set alpha(value:int)
         {
             if (!_sprite) return;
-            _sprite.setOpacity(value);
+            _sprite.alpha = value;
         }
         
         public function set texture(value:String)
         {
             if (!_sprite) return;
-            if (_texture == value) return;
-            _texture = value;
-            _sprite.setDisplayFrame(CCSpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName(value));
+            if (_sprite.textureName == value) return;
+            _sprite.textureName = value;
+            _sprite.pivotX = _sprite.width / 2;
+            _sprite.pivotY = _sprite.height / 2;
         }
         
-        protected var _r:int, _g:int, _b:int;
-        
-        public function get r():int { return _r; };
-        public function get g():int { return _g; };
-        public function get b():int { return _b; };
-        
-        public function set r(value:int):void { _r = value; setColor(new ccColor3B(_r, _g, _b)); };
-        public function set g(value:int):void { _g = value; setColor(new ccColor3B(_r, _g, _b)); };
-        public function set b(value:int):void { _b = value; setColor(new ccColor3B(_r, _g, _b)); };
-        
-        public function setColor(color:ccColor3B)
+        public function set r(value:Number)
         {
             if (!_sprite) return;
-            _sprite.setColor(color);
+            _sprite.r = value;
         }
+        
+        public function set g(value:Number)
+        {
+            if (!_sprite) return;
+            _sprite.g = value;
+        }
+        
+        public function set b(value:Number)
+        {
+            if (!_sprite) return;
+            _sprite.b = value;
+        }
+        
         
         public override function onFrame()
         {

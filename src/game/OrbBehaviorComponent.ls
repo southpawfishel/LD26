@@ -1,14 +1,11 @@
 package
 {
-    import Loom.GameFramework.LoomGameObject;
-    import Loom.GameFramework.TickedComponent;
-    import Loom.GameFramework.TimeManager;
-    import Loom.Graphics.Point2;
-    
-    import Loom.Animation.Tween;
-    import Loom.Animation.EaseType;
-    
-    import cocos2d.CCScaledLayer;
+	import loom.animation.LoomEaseType;
+	import loom.animation.LoomTween;
+	import loom.gameframework.LoomGameObject;
+	import loom.gameframework.TickedComponent;
+	import loom2d.display.Stage;
+    import loom2d.Loom2D;
     
     public delegate OrbDeathCallback(orb:OrbBehaviorComponent, object:LoomGameObject):void;
     
@@ -21,12 +18,10 @@ package
     
     public class OrbBehaviorComponent extends TickedComponent
     {
-        [Inject]
-        protected var _gameLayer:CCScaledLayer;
         protected var _designWidth:int;
         protected var _designHeight:int;
         
-        protected static var textures:Vector.<String> = ["minus.png", "plus.png"];
+        protected static var textures:Vector.<String> = ["minus", "plus"];
         public static var colors:Vector.<int> = [0xE12300, 0x36A91B];
         
         protected var _texture:String;
@@ -71,8 +66,8 @@ package
                 
             _actor = owner.lookupComponentByName("actor") as ActorComponent;
             
-            _designWidth = _gameLayer.designWidth;
-            _designHeight = _gameLayer.designHeight;
+            _designWidth = Loom2D.stage.stageWidth;
+            _designHeight = Loom2D.stage.stageHeight;
             
             _actor.radius = 32;
             _actor.position = MathUtils.randomPoint(100, 100, _designWidth - 100, _designHeight - 100);
@@ -81,7 +76,7 @@ package
             _actor.velocity.x *= MathUtils.randomSign();
             _actor.velocity.y *= MathUtils.randomSign();
             
-            Tween.to(_actor, 0.15, { "scale" : 1, "opacity" : 255, "ease" : EaseType.EASE_IN }).onComplete += function()
+            LoomTween.to(_actor, 0.15, { "scale" : 1, "alpha" : 1, "ease" : LoomEaseType.EASE_IN }).onComplete += function()
             {
                 _alive = true;
             }
@@ -123,7 +118,7 @@ package
             if (!_alive) return;
             
             _alive = false;
-            Tween.to(_actor, 0.15, { "scale" : 0, "opacity" : 0, "ease" : EaseType.EASE_OUT }).onComplete += function()
+            LoomTween.to(_actor, 0.15, { "scale" : 0, "alpha" : 0, "ease" : LoomEaseType.EASE_OUT }).onComplete += function()
             {
                 onDeath(this, owner);
             }

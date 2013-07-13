@@ -1,6 +1,6 @@
-package UI
+package ui
 {
-    import cocos2d.CCNode;
+    import loom2d.display.DisplayObjectContainer;
 
     public delegate ViewCallback():void;
 
@@ -8,12 +8,12 @@ package UI
      * Base view class; convenience callbacks to trigger transitions and 
      * sequence adding/removing from parent.
      */
-    class View extends CCNode
+    class View extends DisplayObjectContainer
     {
         public var onEnter:ViewCallback;
         public var onExit:ViewCallback;
 
-        public function enter(parent:CCNode):void
+        public function enter(parent:DisplayObjectContainer):void
         {
             parent.addChild(this);
             onEnter();
@@ -21,9 +21,9 @@ package UI
 
         public function exit():void
         {
-            if(getParent())
+            if(parent)
             {
-                getParent().removeChild(this);
+                parent.removeChild(this);
                 onExit();
             }
         }

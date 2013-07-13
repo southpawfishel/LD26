@@ -1,57 +1,34 @@
 package
 {
-    import UI.View;
-    import UI.ViewCallback;
-    import UI.Label;
     
-    import Loom.Animation.Tween;
-    import Loom.Animation.EaseType;
-    import Loom.LML.LML;
-    
-    import Loom.Platform.Timer;
-    
-    import cocos2d.CCNode;
-    import cocos2d.CCPoint;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.CCUserDefault;
-    import cocos2d.CCLayerColor;
-    import cocos2d.ccColor4B;
+	import loom.animation.LoomTween;
+	import loom.platform.Timer;
+	import loom2d.display.DisplayObjectContainer;
+	import loom2d.display.Image;
+	import loom2d.display.Quad;
+	import loom2d.display.Stage;
+    import loom2d.Loom2D;
+	import loom2d.textures.Texture;
+	import loom2d.ui.SimpleLabel;
+	import ui.View;
+	import ui.ViewCallback;
     
     public class GameOverView extends View
     {
         public var onReset:ViewCallback = new ViewCallback();
         public var onFadeIn:ViewCallback = new ViewCallback();
         
-        protected var _gameOver:Label;
+        protected var _gameOver:SimpleLabel;
         
-        protected var _fadeToBlack:CCLayerColor = null;
-        
-        public function set opacity(value:int)
-        {
-            if (_fadeToBlack)
-            {
-                _fadeToBlack.setOpacity(value);
-            }
-            if (_gameOver)
-            {
-                _gameOver.setOpacity(value);
-            }
-        }
-        
-        public function get opacity():int
-        {
-            if (_fadeToBlack)
-            {
-                return _fadeToBlack.getOpacity();
-            }
-        }
+        protected var _fadeToBlack:Quad = null;
+		protected var _tempBG:Image = null;
         
         public function GameOverView()
         {
             super();
         }
         
-        public function enter(parent:CCNode)
+        public function enter(parent:DisplayObjectContainer)
         {
             super.enter(parent);
             
@@ -59,30 +36,34 @@ package
             restartGameTimer.onComplete = onStartFadeOut;
             restartGameTimer.start();
             
-            var black:ccColor4B = new ccColor4B();
-            black.r = 0; black.g = 0; black.b = 0; black.a = 255;
-            _fadeToBlack = CCLayerColor.create(black, 5000, 5000);
-            _fadeToBlack.setOpacity(0);
+            _fadeToBlack = new Quad(Loom2D.stage.stageWidth, Loom2D.stage.stageHeight, 0x000000);
+            _fadeToBlack.alpha = 0;
             addChild(_fadeToBlack);
             
-            _gameOver = new Label("assets/Curse-hd.fnt");
+            _gameOver = new SimpleLabel();
+            _gameOver.fontFile = "assets/Curse-hd.fnt";
             _gameOver.text = "GAME OVER";
+            _gameOver.x = Loom2D.stage.stageWidth / 2;
+            _gameOver.y = Loom2D.stage.stageHeight / 2;
+            _gameOver.pivotX = _gameOver.width / 2;
+            _gameOver.pivotY = _gameOver.height / 2;
             _gameOver.scale = 0.5;
-            _gameOver.setPosition(427, 320);
-            _gameOver.setOpacity(0);
+            _gameOver.alpha = 0;
             addChild(_gameOver);
             
-            Tween.to(this, 0.5, { "opacity" : 255 }).onComplete = function(tween:Tween)
+            LoomTween.to(_gameOver, 0.5, { "alpha" : 1 });
+            LoomTween.to(_fadeToBlack, 0.5, { "alpha" : 1 }).onComplete = function(LoomTween:LoomTween)
             {
                 onFadeIn();
             }
             
-            parent.reorderChild(this, 100);
+            parent.setChildIndex(this, 100);
         }
         
         public function exit()
         {
-            Tween.to(this, 0.5, { "opacity" : 0 }).onComplete = onFadeFinished;
+            LoomTween.to(_gameOver, 0.5, { "alpha" : 0 });
+            LoomTween.to(_fadeToBlack, 0.5, { "alpha" : 0 }).onComplete = onFadeFinished;
         }
         
         public function onStartFadeOut(timer:Timer):void
@@ -91,7 +72,7 @@ package
             exit();
         }
 
-        public function onFadeFinished(tween:Tween):void
+        public function onFadeFinished(LoomTween:LoomTween):void
         {
             removeChild(_fadeToBlack, true);
             _fadeToBlack = null;

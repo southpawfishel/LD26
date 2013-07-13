@@ -1,31 +1,24 @@
 package
 {
-    import UI.View;
-    import UI.ViewCallback;
-    import UI.Label;
-    
-    import Loom.Animation.Tween;
-    import Loom.Animation.EaseType;
-    import Loom.LML.LML;
-    
-    import cocos2d.CCNode;
-    import cocos2d.CCPoint;
-    import cocos2d.CCScaledLayer;
-    import cocos2d.CCLayerColor;
-    import cocos2d.ccColor4B;
+    import loom.animation.LoomTween;
+	import loom.lml.LML;
+    import loom.lml.LMLDocument;
+    import loom2d.Loom2D;
+	import loom2d.display.DisplayObjectContainer;
+	import loom2d.math.Point;
+	import loom2d.ui.SimpleLabel;
+	import ui.View;
     
     public class HUDView extends View
     {
         [Bind]
-        protected var _time:Label;
+        protected var _time:SimpleLabel;
         [Bind]
-        protected var _health:Label;
-        //[Bind]
-        //protected var _polarity:Label;
+        protected var _health:SimpleLabel;
         [Bind]
-        protected var _bestTime:Label;
+        protected var _bestTime:SimpleLabel;
         [Bind]
-        protected var _startPrompt:Label;
+        protected var _startPrompt:SimpleLabel;
         
         public function HUDView()
         {
@@ -38,31 +31,32 @@ package
 
         protected function onLMLCreated()
         {
+            if (_startPrompt)
+            {
+                _startPrompt.x = Loom2D.stage.stageWidth / 2;
+                _startPrompt.y = Loom2D.stage.stageHeight / 2;
+                _startPrompt.center();
+            }
             if (_time)
             {
-                _time.setAnchorPoint(new CCPoint(0, 0.5));
+                _time.pivotY = _time.height / 2;
                 _time.text = "Survival Time: 0";
             }
             if (_bestTime)
             {
-                _bestTime.setAnchorPoint(new CCPoint(0, 0.5));
+                _bestTime.pivotY = _bestTime.height / 2;
                 _bestTime.text = "Longest Run: 0";
             }
             if (_health)
             {
-                _health.setAnchorPoint(new CCPoint(0, 0.5));
+                _health.pivotY = _health.height / 2;
                 _health.text = "Health: " + GameLevel.INITIAL_HEALTH_MS;
             }
-            //if (_polarity)
-            //{
-            //    _polarity.setAnchorPoint(new CCPoint(0, 0.5));
-            //    _polarity.text = "Polarity: 0";
-            //}
         }
         
         public function onGameBegan()
         {
-            _startPrompt.setVisible(false);
+            LoomTween.to(_startPrompt, 0.2, { "alpha" : 0 }).onComplete = function() { _startPrompt.visible = false; }
         }
         
         public function onTimeChanged(survivalTime:int, health:int, bestTime:int)
@@ -72,21 +66,18 @@ package
             _bestTime.text = "Longest Run: " + Math.round(bestTime / 1000);
         }
         
-        public function onPolarityChanged(polarity:int)
-        {
-            //_polarity.text = "Polarity: " + (polarity > 0 ? "+" : "") + polarity;
-        }
-        
-        public function enter(parent:CCNode)
+        public function enter(parent:DisplayObjectContainer)
         {
             super.enter(parent);
             
             if (_startPrompt)
             {
-                _startPrompt.setVisible(true);
+                _startPrompt.visible = true;
+                _startPrompt.alpha = 0;
+                LoomTween.to(_startPrompt, 0.5, { "alpha" : 1 });
             }
             
-            parent.reorderChild(this, 10);
+            parent.setChildIndex(this, 10);
         }
         
         public function exit()

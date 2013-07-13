@@ -1,10 +1,8 @@
 package
 {
-    import UI.View;
+	import loom2d.display.DisplayObjectContainer;
+	import ui.View;
     
-    import cocos2d.CCNode;
-    
-    import Loom.GameFramework.LoomGroup;
     
     public class GameView extends View
     {
@@ -20,7 +18,7 @@ package
             super();
         }
         
-        public function enter(parent:CCNode)
+        public function enter(parent:DisplayObjectContainer)
         {
             super.enter(parent);
         

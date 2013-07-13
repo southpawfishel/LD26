@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:6f9ff163dcb1766b2eb2e2f15a73423c$ -->
-<!--Format:
-n  => name of the sprite
-x  => sprite x pos in texture
-y  => sprite y pos in texture
-w  => sprite width (may be trimmed)
-h  => sprite height (may be trimmed)
-oX => sprite's x-corner offset (only available if trimmed)
-oY => sprite's y-corner offset (only available if trimmed)
-oW => sprite's original width (only available if trimmed)
-oH => sprite's original height (only available if trimmed)
-r => 'y' only set if sprite is rotated
--->
-<TextureAtlas imagePath="sprites.png" width="256" height="256">
-    <sprite n="minus" x="68" y="156" w="64" h="64"/>
-    <sprite n="plus" x="2" y="156" w="64" h="64"/>
-    <sprite n="ring" x="2" y="2" w="80" h="80"/>
-    <sprite n="whiteorb" x="2" y="84" w="70" h="70"/>
+<!-- $TexturePacker:SmartUpdate:c6c6a3ac8b6e40e08c3208ba61d943c8$ -->
+<TextureAtlas imagePath="sprites.png">
+    <SubTexture name="minus" x="68" y="156" width="64" height="64"/>
+    <SubTexture name="plus" x="2" y="156" width="64" height="64"/>
+    <SubTexture name="ring" x="2" y="2" width="80" height="80"/>
+    <SubTexture name="whiteorb" x="2" y="84" width="70" height="70"/>
 </TextureAtlas>
