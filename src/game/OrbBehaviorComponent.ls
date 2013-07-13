@@ -1,7 +1,7 @@
 package
 {
-	import loom.animation.EaseType;
-	import loom.animation.Tween;
+	import loom.animation.LoomEaseType;
+	import loom.animation.LoomTween;
 	import loom.gameframework.LoomGameObject;
 	import loom.gameframework.TickedComponent;
 	import loom2d.display.Stage;
@@ -76,7 +76,7 @@ package
             _actor.velocity.x *= MathUtils.randomSign();
             _actor.velocity.y *= MathUtils.randomSign();
             
-            Tween.to(_actor, 0.15, { "scale" : 1, "alpha" : 1, "ease" : EaseType.EASE_IN }).onComplete += function()
+            LoomTween.to(_actor, 0.15, { "scale" : 1, "alpha" : 1, "ease" : LoomEaseType.EASE_IN }).onComplete += function()
             {
                 _alive = true;
             }
@@ -118,7 +118,7 @@ package
             if (!_alive) return;
             
             _alive = false;
-            Tween.to(_actor, 0.15, { "scale" : 0, "alpha" : 0, "ease" : EaseType.EASE_OUT }).onComplete += function()
+            LoomTween.to(_actor, 0.15, { "scale" : 0, "alpha" : 0, "ease" : LoomEaseType.EASE_OUT }).onComplete += function()
             {
                 onDeath(this, owner);
             }

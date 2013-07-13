@@ -1,9 +1,9 @@
 <HUDView>
 
-    <loom2d.ui.Label id="_startPrompt" fontFile="assets/Curse-hd.fnt" text="Touch Anywhere to Start" scale="0.5" />
+    <loom2d.ui.SimpleLabel id="_startPrompt" fontFile="assets/Curse-hd.fnt" text="Touch Anywhere to Start" scale="0.5" />
 
-    <loom2d.ui.Label id="_time" fontFile="assets/Curse-hd.fnt" text="Survival Time: 0" x="10" y="10" scale="0.2" />
-    <loom2d.ui.Label id="_health" fontFile="assets/Curse-hd.fnt" text="Health: 30" x="10" y="30" scale="0.2" />
-    <loom2d.ui.Label id="_bestTime" fontFile="assets/Curse-hd.fnt" text="Longest Run: 0" x="10" y="50" scale="0.2" />
+    <loom2d.ui.SimpleLabel id="_time" fontFile="assets/Curse-hd.fnt" text="Survival Time: 0" x="10" y="10" scale="0.2" />
+    <loom2d.ui.SimpleLabel id="_health" fontFile="assets/Curse-hd.fnt" text="Health: 30" x="10" y="30" scale="0.2" />
+    <loom2d.ui.SimpleLabel id="_bestTime" fontFile="assets/Curse-hd.fnt" text="Longest Run: 0" x="10" y="50" scale="0.2" />
 
 </HUDView>

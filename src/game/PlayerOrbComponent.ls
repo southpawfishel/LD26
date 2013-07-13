@@ -1,8 +1,8 @@
 package
 {
 	import cocosdenshion.SimpleAudioEngine;
-	import loom.animation.EaseType;
-	import loom.animation.Tween;
+	import loom.animation.LoomEaseType;
+	import loom.animation.LoomTween;
 	import loom.gameframework.LoomGameObject;
 	import loom.gameframework.TickedComponent;
 	import loom2d.display.Stage;
@@ -109,7 +109,7 @@ package
             
             if (!_alive)
             {
-                Tween.to(_actor, 0.15, { "scale" : 1, "alpha" : 1, "ease" : EaseType.EASE_IN }).onComplete += function()
+                LoomTween.to(_actor, 0.15, { "scale" : 1, "alpha" : 1, "ease" : LoomEaseType.EASE_IN }).onComplete += function()
                 {
                     _alive = true;
                 }
@@ -192,8 +192,8 @@ package
             // Scale based on our polarity
             var newScale = 1.0 + (0.1 * Math.abs(_polarity));
             
-            // Tween to these new values
-            Tween.to(_actor, 0.2, { "r" : dominantColor.red, "g" : dominantColor.green, "b" : dominantColor.blue, "scale" : newScale });
+            // LoomTween to these new values
+            LoomTween.to(_actor, 0.2, { "r" : dominantColor.red, "g" : dominantColor.green, "b" : dominantColor.blue, "scale" : newScale });
             
             // Kill the orb we collided with
             behavior.kill();

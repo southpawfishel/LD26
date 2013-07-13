@@ -1,7 +1,7 @@
 package
 {
     
-	import loom.animation.Tween;
+	import loom.animation.LoomTween;
 	import loom.platform.Timer;
 	import loom2d.display.DisplayObjectContainer;
 	import loom2d.display.Image;
@@ -9,7 +9,7 @@ package
 	import loom2d.display.Stage;
     import loom2d.Loom2D;
 	import loom2d.textures.Texture;
-	import loom2d.ui.Label;
+	import loom2d.ui.SimpleLabel;
 	import ui.View;
 	import ui.ViewCallback;
     
@@ -18,7 +18,7 @@ package
         public var onReset:ViewCallback = new ViewCallback();
         public var onFadeIn:ViewCallback = new ViewCallback();
         
-        protected var _gameOver:Label;
+        protected var _gameOver:SimpleLabel;
         
         protected var _fadeToBlack:Quad = null;
 		protected var _tempBG:Image = null;
@@ -40,7 +40,7 @@ package
             _fadeToBlack.alpha = 0;
             addChild(_fadeToBlack);
             
-            _gameOver = new Label();
+            _gameOver = new SimpleLabel();
             _gameOver.fontFile = "assets/Curse-hd.fnt";
             _gameOver.text = "GAME OVER";
             _gameOver.x = Loom2D.stage.stageWidth / 2;
@@ -51,8 +51,8 @@ package
             _gameOver.alpha = 0;
             addChild(_gameOver);
             
-            Tween.to(_gameOver, 0.5, { "alpha" : 1 });
-            Tween.to(_fadeToBlack, 0.5, { "alpha" : 1 }).onComplete = function(tween:Tween)
+            LoomTween.to(_gameOver, 0.5, { "alpha" : 1 });
+            LoomTween.to(_fadeToBlack, 0.5, { "alpha" : 1 }).onComplete = function(LoomTween:LoomTween)
             {
                 onFadeIn();
             }
@@ -62,8 +62,8 @@ package
         
         public function exit()
         {
-            Tween.to(_gameOver, 0.5, { "alpha" : 0 });
-            Tween.to(_fadeToBlack, 0.5, { "alpha" : 0 }).onComplete = onFadeFinished;
+            LoomTween.to(_gameOver, 0.5, { "alpha" : 0 });
+            LoomTween.to(_fadeToBlack, 0.5, { "alpha" : 0 }).onComplete = onFadeFinished;
         }
         
         public function onStartFadeOut(timer:Timer):void
@@ -72,7 +72,7 @@ package
             exit();
         }
 
-        public function onFadeFinished(tween:Tween):void
+        public function onFadeFinished(LoomTween:LoomTween):void
         {
             removeChild(_fadeToBlack, true);
             _fadeToBlack = null;
